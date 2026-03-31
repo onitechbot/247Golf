@@ -1,941 +1,2303 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>247GolfSimulator — Precision Play Brand Direction</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-  <style>
-    /* =========================================
-       RESET & BASE
-       ========================================= */
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    :root {
-      --white: #FFFFFF;
-      --forest: #1B4332;
-      --forest-light: #2D6A4F;
-      --sage: #F0F7F4;
-      --black: #111111;
-      --gray: #6B7280;
-      --gray-light: #E5E7EB;
-      --gray-lightest: #F9FAFB;
-    }
-
-    html {
-      scroll-behavior: smooth;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      color: var(--black);
-      background: var(--white);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-
-    /* =========================================
-       NAVIGATION
-       ========================================= */
-    .nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-      height: 56px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .nav-inner {
-      width: 100%;
-      max-width: 1200px;
-      padding: 0 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .nav-brand {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 600;
-      font-size: 15px;
-      color: var(--black);
-      letter-spacing: -0.02em;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--gray);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    .nav-links a:hover {
-      color: var(--black);
-    }
-
-    .nav-cta {
-      display: inline-flex;
-      align-items: center;
-      padding: 8px 20px;
-      background: var(--forest);
-      color: var(--white) !important;
-      border-radius: 100px;
-      font-size: 13px !important;
-      font-weight: 500;
-      transition: background 0.2s ease, transform 0.15s ease;
-    }
-
-    .nav-cta:hover {
-      background: var(--forest-light);
-      transform: translateY(-1px);
-    }
-
-    /* =========================================
-       SECTIONS
-       ========================================= */
-    section {
-      padding: 120px 24px;
-    }
-
-    .section-inner {
-      max-width: 960px;
-      margin: 0 auto;
-    }
-
-    .section-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--gray);
-      margin-bottom: 16px;
-    }
-
-    .section-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(28px, 4vw, 40px);
-      font-weight: 600;
-      color: var(--black);
-      letter-spacing: -0.03em;
-      line-height: 1.2;
-      margin-bottom: 16px;
-    }
-
-    .section-subtitle {
-      font-family: 'Inter', sans-serif;
-      font-size: 17px;
-      color: var(--gray);
-      line-height: 1.7;
-      max-width: 560px;
-    }
-
-    .bg-sage {
-      background: var(--sage);
-    }
-
-    .bg-white {
-      background: var(--white);
-    }
-
-    /* =========================================
-       FADE IN ANIMATION
-       ========================================= */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* =========================================
-       COVER SECTION
-       ========================================= */
-    .cover {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding-top: 56px;
-      background: var(--white);
-    }
-
-    .cover-content {
-      max-width: 720px;
-    }
-
-    .cover-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      font-weight: 400;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--gray);
-      margin-bottom: 48px;
-    }
-
-    .cover-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(42px, 7vw, 80px);
-      font-weight: 700;
-      color: var(--black);
-      letter-spacing: -0.04em;
-      line-height: 1.05;
-      margin-bottom: 24px;
-    }
-
-    .cover-tagline {
-      font-family: 'Inter', sans-serif;
-      font-size: clamp(18px, 2.5vw, 24px);
-      font-weight: 300;
-      color: var(--gray);
-      letter-spacing: -0.01em;
-      margin-bottom: 32px;
-    }
-
-    .cover-accent {
-      width: 48px;
-      height: 3px;
-      background: var(--forest);
-      border-radius: 2px;
-      margin: 0 auto;
-    }
-
-    /* =========================================
-       COLOR PALETTE
-       ========================================= */
-    .palette-stripes {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-top: 48px;
-    }
-
-    .palette-stripe {
-      display: flex;
-      align-items: flex-end;
-      padding: 20px 28px;
-      position: relative;
-    }
-
-    .palette-stripe:nth-child(1) {
-      height: 120px;
-      background: var(--white);
-      border: 1px solid var(--gray-light);
-      border-bottom: none;
-      border-radius: 12px 12px 0 0;
-    }
-
-    .palette-stripe:nth-child(2) {
-      height: 140px;
-      background: var(--forest);
-    }
-
-    .palette-stripe:nth-child(3) {
-      height: 100px;
-      background: var(--sage);
-    }
-
-    .palette-stripe:nth-child(4) {
-      height: 80px;
-      background: var(--black);
-    }
-
-    .palette-stripe:nth-child(5) {
-      height: 80px;
-      background: var(--gray);
-      border-radius: 0 0 12px 12px;
-    }
-
-    .palette-info {
-      display: flex;
-      align-items: baseline;
-      gap: 16px;
-    }
-
-    .palette-name {
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-    }
-
-    .palette-hex {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      font-weight: 400;
-      opacity: 0.7;
-    }
-
-    .palette-stripe:nth-child(1) .palette-name,
-    .palette-stripe:nth-child(1) .palette-hex {
-      color: var(--black);
-    }
-
-    .palette-stripe:nth-child(2) .palette-name,
-    .palette-stripe:nth-child(2) .palette-hex,
-    .palette-stripe:nth-child(4) .palette-name,
-    .palette-stripe:nth-child(4) .palette-hex,
-    .palette-stripe:nth-child(5) .palette-name,
-    .palette-stripe:nth-child(5) .palette-hex {
-      color: var(--white);
-    }
-
-    .palette-stripe:nth-child(3) .palette-name,
-    .palette-stripe:nth-child(3) .palette-hex {
-      color: var(--forest);
-    }
-
-    /* =========================================
-       TYPOGRAPHY SECTION
-       ========================================= */
-    .type-cards {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 24px;
-      margin-top: 48px;
-    }
-
-    .type-card {
-      background: var(--white);
-      border: 1px solid var(--gray-light);
-      border-radius: 12px;
-      padding: 40px;
-    }
-
-    .type-card-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--gray);
-      margin-bottom: 28px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--gray-light);
-    }
-
-    .type-specimen-row {
-      margin-bottom: 20px;
-    }
-
-    .type-specimen-row:last-child {
-      margin-bottom: 0;
-    }
-
-    .type-specimen-size {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--gray);
-      margin-bottom: 4px;
-    }
-
-    .type-space-grotesk {
-      font-family: 'Space Grotesk', sans-serif;
-      color: var(--black);
-      letter-spacing: -0.03em;
-    }
-
-    .type-inter {
-      font-family: 'Inter', sans-serif;
-      color: var(--black);
-    }
-
-    .type-jetbrains {
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--black);
-    }
-
-    /* =========================================
-       MOOD BOARD
-       ========================================= */
-    .mood-grid {
-      display: grid;
-      grid-template-columns: 1.4fr 1fr;
-      grid-template-rows: 1fr 1fr;
-      gap: 16px;
-      margin-top: 48px;
-      height: 540px;
-    }
-
-    .mood-img {
-      border-radius: 12px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .mood-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.5s ease;
-    }
-
-    .mood-img:hover img {
-      transform: scale(1.03);
-    }
-
-    .mood-img-large {
-      grid-row: 1 / 3;
-    }
-
-    /* =========================================
-       COMPONENTS
-       ========================================= */
-    .components-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
-      margin-top: 48px;
-    }
-
-    .component-group h3 {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--gray);
-      margin-bottom: 24px;
-    }
-
-    .btn-row {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 14px 32px;
-      border-radius: 10px;
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      border: none;
-      text-align: center;
-    }
-
-    .btn-primary {
-      background: var(--forest);
-      color: var(--white);
-    }
-
-    .btn-primary:hover {
-      background: var(--forest-light);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(27, 67, 50, 0.25);
-    }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--forest);
-      border: 1.5px solid var(--forest);
-    }
-
-    .btn-outline:hover {
-      background: var(--sage);
-      transform: translateY(-1px);
-    }
-
-    .btn-ghost {
-      background: transparent;
-      color: var(--gray);
-      border: 1.5px solid transparent;
-    }
-
-    .btn-ghost:hover {
-      color: var(--forest);
-      background: var(--sage);
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-label {
-      display: block;
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--black);
-      margin-bottom: 8px;
-    }
-
-    .form-input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1.5px solid var(--gray-light);
-      border-radius: 10px;
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      color: var(--black);
-      background: var(--white);
-      outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .form-input::placeholder {
-      color: #B0B7C0;
-    }
-
-    .form-input:focus {
-      border-color: var(--forest);
-      box-shadow: 0 0 0 3px rgba(27, 67, 50, 0.1);
-    }
-
-    .form-select {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1.5px solid var(--gray-light);
-      border-radius: 10px;
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      color: var(--black);
-      background: var(--white);
-      outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 14px center;
-    }
-
-    .form-select:focus {
-      border-color: var(--forest);
-      box-shadow: 0 0 0 3px rgba(27, 67, 50, 0.1);
-    }
-
-    /* =========================================
-       LOGO CONCEPTS
-       ========================================= */
-    .logo-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      margin-top: 48px;
-    }
-
-    .logo-card {
-      background: var(--white);
-      border: 1px solid var(--gray-light);
-      border-radius: 12px;
-      overflow: hidden;
-      transition: box-shadow 0.3s ease;
-    }
-
-    .logo-card:hover {
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
-    }
-
-    .logo-card:first-child {
-      grid-row: 1 / 3;
-    }
-
-    .logo-card img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .logo-card-caption {
-      padding: 16px 20px;
-      border-top: 1px solid var(--gray-light);
-    }
-
-    .logo-card-caption p {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--gray);
-      letter-spacing: 0.04em;
-    }
-
-    /* =========================================
-       FOOTER
-       ========================================= */
-    .footer {
-      padding: 48px 24px;
-      text-align: center;
-      border-top: 1px solid var(--gray-light);
-    }
-
-    .footer p {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--gray);
-      letter-spacing: 0.04em;
-    }
-
-    /* =========================================
-       RESPONSIVE
-       ========================================= */
-    @media (max-width: 768px) {
-      section {
-        padding: 80px 20px;
-      }
-
-      .nav-links {
-        display: none;
-      }
-
-      .cover-title {
-        font-size: 36px;
-      }
-
-      .mood-grid {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto;
-        height: auto;
-      }
-
-      .mood-img-large {
-        grid-row: auto;
-        height: 280px;
-      }
-
-      .mood-img:not(.mood-img-large) {
-        height: 200px;
-      }
-
-      .components-grid {
-        grid-template-columns: 1fr;
-        gap: 40px;
-      }
-
-      .logo-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .logo-card:first-child {
-        grid-row: auto;
-      }
-
-      .palette-stripe:nth-child(1) { height: 80px; }
-      .palette-stripe:nth-child(2) { height: 100px; }
-      .palette-stripe:nth-child(3) { height: 70px; }
-      .palette-stripe:nth-child(4) { height: 60px; }
-      .palette-stripe:nth-child(5) { height: 60px; }
-    }
-
-    @media (max-width: 480px) {
-      .cover-title {
-        font-size: 28px;
-      }
-
-      .type-card {
-        padding: 28px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>247GolfSimulator — Concept 2: Precision Play</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ========================================
+   RESET & BASE
+   ======================================== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --white: #FFFFFF;
+  --forest: #1B5E20;
+  --forest-light: #2E7D32;
+  --forest-dark: #0D3B13;
+  --light-gray: #F5F5F5;
+  --mid-gray: #E0E0E0;
+  --border-gray: #D5D5D5;
+  --dark: #1A1A1A;
+  --dark-muted: #555555;
+  --amber: #FFB300;
+  --amber-light: #FFD54F;
+  --grid-line: rgba(27, 94, 32, 0.06);
+  --grid-line-strong: rgba(27, 94, 32, 0.12);
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--dark);
+  background: var(--white);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========================================
+   GRID BACKGROUND
+   ======================================== */
+.grid-bg {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.grid-bg-strong {
+  background-image:
+    linear-gradient(var(--grid-line-strong) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line-strong) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* ========================================
+   LAYOUT
+   ======================================== */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.section {
+  padding: 100px 0;
+  position: relative;
+}
+
+.section-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--forest);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-label::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 1px;
+  background: var(--forest);
+}
+
+.section-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--dark);
+  line-height: 1.15;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+
+.section-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  color: var(--dark-muted);
+  max-width: 560px;
+  line-height: 1.7;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--mid-gray);
+}
+
+/* ========================================
+   FADE-IN ANIMATION
+   ======================================== */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ========================================
+   SECTION 1: HERO
+   ======================================== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: var(--white);
+  overflow: hidden;
+}
+
+.hero .grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid-line-strong) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line-strong) 1px, transparent 1px);
+  background-size: 80px 80px;
+  pointer-events: none;
+}
+
+.hero .grid-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 30%, var(--white) 70%);
+}
+
+.hero-content {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  padding: 40px;
+}
+
+.hero-badge {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--forest);
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.hero-badge::before,
+.hero-badge::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--forest);
+}
+
+.hero-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(48px, 8vw, 96px);
+  font-weight: 700;
+  color: var(--dark);
+  line-height: 1.0;
+  letter-spacing: -2px;
+  margin-bottom: 8px;
+}
+
+.hero-title .green {
+  color: var(--forest);
+}
+
+.hero-concept {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(18px, 3vw, 28px);
+  font-weight: 300;
+  color: var(--dark-muted);
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  margin-bottom: 48px;
+}
+
+.hero-tagline {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  color: var(--dark-muted);
+  max-width: 420px;
+  margin: 0 auto 48px;
+  line-height: 1.7;
+}
+
+.hero-meta {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--dark-muted);
+}
+
+.hero-meta span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero-meta .dot {
+  width: 6px;
+  height: 6px;
+  background: var(--forest);
+  border-radius: 50%;
+}
+
+/* ========================================
+   SECTION 2: MOOD & POSITIONING
+   ======================================== */
+.mood-section {
+  background: var(--light-gray);
+}
+
+.mood-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border-gray);
+  margin-top: 48px;
+}
+
+.mood-cell {
+  background: var(--white);
+  padding: 48px;
+}
+
+.mood-cell-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--forest);
+  margin-bottom: 16px;
+}
+
+.mood-cell-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--dark);
+  line-height: 1.3;
+}
+
+.mood-cell-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--dark-muted);
+  margin-top: 12px;
+  line-height: 1.6;
+}
+
+.mood-statement {
+  margin-top: 48px;
+  padding: 48px;
+  border: 1px solid var(--mid-gray);
+  background: var(--white);
+}
+
+.mood-statement blockquote {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 28px;
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--dark);
+  position: relative;
+  padding-left: 24px;
+  border-left: 3px solid var(--forest);
+}
+
+/* ========================================
+   SECTION 3: COLOR PALETTE
+   ======================================== */
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 32px;
+  margin-top: 48px;
+}
+
+.color-card {
+  text-align: left;
+}
+
+.color-swatch {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  position: relative;
+  border: 1px solid var(--mid-gray);
+}
+
+.color-swatch.white-swatch {
+  border: 1px solid var(--border-gray);
+}
+
+.color-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--dark);
+  margin-bottom: 4px;
+}
+
+.color-hex {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  color: var(--dark-muted);
+  font-weight: 400;
+  margin-bottom: 4px;
+}
+
+.color-role {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: var(--dark-muted);
+  margin-bottom: 8px;
+}
+
+.color-contrast {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--forest);
+  padding: 4px 8px;
+  border: 1px solid var(--forest);
+  display: inline-block;
+  border-radius: 2px;
+}
+
+/* ========================================
+   SECTION 4: TYPOGRAPHY
+   ======================================== */
+.type-section {
+  background: var(--light-gray);
+}
+
+.type-showcase {
+  margin-top: 48px;
+}
+
+.type-family-block {
+  background: var(--white);
+  padding: 48px;
+  margin-bottom: 1px;
+}
+
+.type-family-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--forest);
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--mid-gray);
+}
+
+.type-scale-row {
+  display: flex;
+  align-items: baseline;
+  gap: 32px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--light-gray);
+}
+
+.type-scale-row:last-child {
+  border-bottom: none;
+}
+
+.type-scale-meta {
+  flex: 0 0 140px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  color: var(--dark-muted);
+  letter-spacing: 1px;
+}
+
+.type-scale-sample {
+  flex: 1;
+}
+
+.type-sample-h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  line-height: 1.1;
+}
+
+.type-sample-h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 36px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+.type-sample-h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.type-sample-h4 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.type-sample-body {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--dark-muted);
+}
+
+.type-sample-body-sm {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--dark-muted);
+}
+
+.type-sample-caption {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--dark-muted);
+}
+
+.brand-copy-block {
+  background: var(--white);
+  padding: 48px;
+  margin-top: 1px;
+}
+
+.brand-copy-block .copy-example {
+  margin-bottom: 32px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--light-gray);
+}
+
+.brand-copy-block .copy-example:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.copy-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--forest);
+  margin-bottom: 12px;
+}
+
+.copy-headline {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--dark);
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+.copy-body {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  color: var(--dark-muted);
+  line-height: 1.7;
+  max-width: 600px;
+  margin-top: 8px;
+}
+
+/* ========================================
+   SECTION 5: BUTTONS
+   ======================================== */
+.button-showcase {
+  margin-top: 48px;
+}
+
+.button-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 32px;
+  padding: 32px;
+  background: var(--light-gray);
+  border-radius: 4px;
+}
+
+.button-row.dark-row {
+  background: var(--dark);
+}
+
+.button-row-label {
+  flex: 0 0 120px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--dark-muted);
+}
+
+.button-row.dark-row .button-row-label {
+  color: rgba(255,255,255,0.5);
+}
+
+.btn {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  padding: 14px 32px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  border-radius: 2px;
+}
+
+.btn-primary {
+  background: var(--forest);
+  color: var(--white);
+  border-color: var(--forest);
+}
+
+.btn-primary:hover {
+  background: var(--forest-dark);
+  border-color: var(--forest-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(27, 94, 32, 0.3);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--forest);
+  border-color: var(--forest);
+}
+
+.btn-secondary:hover {
+  background: var(--forest);
+  color: var(--white);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--dark-muted);
+  border-color: transparent;
+  padding: 14px 16px;
+}
+
+.btn-ghost:hover {
+  color: var(--forest);
+}
+
+.btn-ghost::after {
+  content: ' \2192';
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+
+.btn-ghost:hover::after {
+  transform: translateX(4px);
+}
+
+.btn-white {
+  background: var(--white);
+  color: var(--forest);
+  border-color: var(--white);
+}
+
+.btn-white:hover {
+  background: var(--light-gray);
+  border-color: var(--light-gray);
+  transform: translateY(-1px);
+}
+
+.btn-sm {
+  font-size: 12px;
+  padding: 10px 24px;
+}
+
+.btn-lg {
+  font-size: 16px;
+  padding: 18px 40px;
+}
+
+/* ========================================
+   SECTION 6: COMPONENTS
+   ======================================== */
+.component-section {
+  background: var(--light-gray);
+}
+
+.component-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 48px;
+}
+
+/* Navbar Component */
+.comp-navbar {
+  background: var(--white);
+  padding: 0;
+  grid-column: 1 / -1;
+  border: 1px solid var(--mid-gray);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.comp-navbar-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--dark-muted);
+  padding: 16px 24px;
+  background: var(--light-gray);
+  border-bottom: 1px solid var(--mid-gray);
+}
+
+.navbar-demo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px;
+}
+
+.navbar-logo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--dark);
+}
+
+.navbar-logo span {
+  color: var(--forest);
+}
+
+.navbar-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+
+.navbar-links a {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dark-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+  position: relative;
+}
+
+.navbar-links a:hover {
+  color: var(--forest);
+}
+
+.navbar-links a.active {
+  color: var(--forest);
+}
+
+.navbar-links a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--forest);
+}
+
+.navbar-cta .btn {
+  font-size: 13px;
+  padding: 10px 24px;
+}
+
+/* Card Component */
+.comp-card-wrapper {
+  border: 1px solid var(--mid-gray);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.comp-card-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--dark-muted);
+  padding: 16px 24px;
+  background: var(--light-gray);
+  border-bottom: 1px solid var(--mid-gray);
+}
+
+.card-demo {
+  background: var(--white);
+  padding: 32px;
+}
+
+.card {
+  background: var(--white);
+  border: 1px solid var(--mid-gray);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  transform: translateY(-2px);
+}
+
+.card-image {
+  width: 100%;
+  height: 180px;
+  background: var(--light-gray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 24px;
+}
+
+.card-tag {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--forest);
+  margin-bottom: 8px;
+}
+
+.card-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--dark);
+  margin-bottom: 8px;
+}
+
+.card-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--dark-muted);
+  line-height: 1.6;
+}
+
+/* Pricing Card Component */
+.pricing-demo {
+  background: var(--white);
+  padding: 32px;
+}
+
+.pricing-card {
+  border: 2px solid var(--mid-gray);
+  border-radius: 4px;
+  padding: 32px;
+  text-align: center;
+  position: relative;
+  transition: border-color 0.2s;
+}
+
+.pricing-card:hover {
+  border-color: var(--forest);
+}
+
+.pricing-card.featured {
+  border-color: var(--forest);
+}
+
+.pricing-card.featured::before {
+  content: 'POPULAR';
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--white);
+  background: var(--forest);
+  padding: 6px 16px;
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 0 0 4px 4px;
+}
+
+.pricing-tier {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--dark-muted);
+  margin-bottom: 16px;
+}
+
+.pricing-amount {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--dark);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.pricing-amount span {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--dark-muted);
+}
+
+.pricing-period {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--dark-muted);
+  margin-bottom: 24px;
+}
+
+.pricing-features {
+  list-style: none;
+  text-align: left;
+  margin-bottom: 24px;
+}
+
+.pricing-features li {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--dark-muted);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--light-gray);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pricing-features li::before {
+  content: '\2713';
+  color: var(--forest);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+/* Form Component */
+.form-demo {
+  background: var(--white);
+  padding: 32px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--dark);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.form-input {
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--border-gray);
+  border-radius: 2px;
+  background: var(--white);
+  color: var(--dark);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.form-input:focus {
+  border-color: var(--forest);
+  box-shadow: 0 0 0 3px rgba(27, 94, 32, 0.1);
+}
+
+.form-input::placeholder {
+  color: var(--border-gray);
+}
+
+.form-hint {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: var(--dark-muted);
+  margin-top: 6px;
+}
+
+/* ========================================
+   SECTION 7: PHOTOGRAPHY
+   ======================================== */
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: 48px;
+  background: var(--white);
+}
+
+.photo-cell {
+  background: var(--white);
+  border: 8px solid var(--white);
+}
+
+.photo-cell img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  display: block;
+  filter: saturate(0.85) contrast(1.05);
+}
+
+.photo-cell-caption {
+  padding: 16px 0 8px;
+}
+
+.photo-cell-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--dark);
+  margin-bottom: 4px;
+}
+
+.photo-cell-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: var(--dark-muted);
+  line-height: 1.5;
+}
+
+.photo-direction {
+  margin-top: 48px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.photo-rule {
+  padding: 24px;
+  border: 1px solid var(--mid-gray);
+  border-radius: 4px;
+}
+
+.photo-rule-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--mid-gray);
+  margin-bottom: 8px;
+}
+
+.photo-rule-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--dark);
+  margin-bottom: 8px;
+}
+
+.photo-rule-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: var(--dark-muted);
+  line-height: 1.6;
+}
+
+/* ========================================
+   SECTION 8: LOGO PLACEHOLDER
+   ======================================== */
+.logo-section {
+  background: var(--light-gray);
+}
+
+.logo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-top: 48px;
+}
+
+.logo-container {
+  background: var(--white);
+  border: 1px solid var(--mid-gray);
+  border-radius: 4px;
+  padding: 48px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  position: relative;
+}
+
+.logo-container img {
+  max-width: 180px;
+  max-height: 100px;
+  object-fit: contain;
+}
+
+.logo-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-placeholder-icon {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--forest);
+  letter-spacing: -1px;
+}
+
+.logo-placeholder-sub {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--dark-muted);
+}
+
+.logo-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--dark-muted);
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--light-gray);
+  width: 100%;
+  text-align: center;
+}
+
+.logo-file {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  color: var(--border-gray);
+  margin-top: 4px;
+}
+
+/* Dark variant */
+.logo-container.dark {
+  background: var(--dark);
+  border-color: var(--dark);
+}
+
+.logo-container.dark .logo-placeholder-icon {
+  color: var(--white);
+}
+
+.logo-container.dark .logo-placeholder-sub {
+  color: rgba(255,255,255,0.4);
+}
+
+.logo-container.dark .logo-label {
+  color: rgba(255,255,255,0.4);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.logo-container.dark .logo-file {
+  color: rgba(255,255,255,0.2);
+}
+
+/* ========================================
+   SECTION 9: MINI WEBSITE MOCKUP
+   ======================================== */
+.mockup-frame {
+  margin-top: 48px;
+  border: 1px solid var(--mid-gray);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--white);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.06);
+}
+
+.mockup-browser {
+  background: var(--light-gray);
+  border-bottom: 1px solid var(--mid-gray);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mockup-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.mockup-dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border-gray);
+}
+
+.mockup-url {
+  flex: 1;
+  background: var(--white);
+  border: 1px solid var(--mid-gray);
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: var(--dark-muted);
+}
+
+.mockup-content {
+  transform: scale(1);
+  transform-origin: top left;
+}
+
+/* Mini Navbar */
+.mini-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  border-bottom: 1px solid var(--light-gray);
+}
+
+.mini-nav-logo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--dark);
+}
+
+.mini-nav-logo span {
+  color: var(--forest);
+}
+
+.mini-nav-links {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+}
+
+.mini-nav-links li {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: var(--dark-muted);
+}
+
+.mini-nav-btn {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 8px 16px;
+  background: var(--forest);
+  color: var(--white);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+/* Mini Hero */
+.mini-hero {
+  padding: 64px 32px;
+  text-align: center;
+  background: var(--white);
+  position: relative;
+}
+
+.mini-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+.mini-hero h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--dark);
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.mini-hero h2 span {
+  color: var(--forest);
+}
+
+.mini-hero p {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--dark-muted);
+  max-width: 480px;
+  margin: 0 auto 24px;
+  position: relative;
+}
+
+.mini-hero-btns {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  position: relative;
+}
+
+/* Mini Features */
+.mini-features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--mid-gray);
+}
+
+.mini-feature {
+  background: var(--white);
+  padding: 32px;
+  text-align: center;
+}
+
+.mini-feature-icon {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--forest);
+  border-radius: 2px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  color: var(--forest);
+  font-weight: 700;
+}
+
+.mini-feature h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--dark);
+  margin-bottom: 8px;
+}
+
+.mini-feature p {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: var(--dark-muted);
+  line-height: 1.5;
+}
+
+/* Mini CTA */
+.mini-cta {
+  background: var(--forest);
+  padding: 40px 32px;
+  text-align: center;
+}
+
+.mini-cta h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 16px;
+}
+
+.mini-cta-form {
+  display: flex;
+  gap: 8px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.mini-cta-form input {
+  flex: 1;
+  padding: 10px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 2px;
+  background: rgba(255,255,255,0.1);
+  color: var(--white);
+  outline: none;
+}
+
+.mini-cta-form input::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+
+.mini-cta-form button {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 20px;
+  background: var(--amber);
+  color: var(--dark);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+/* Mini Footer */
+.mini-footer {
+  padding: 20px 32px;
+  border-top: 1px solid var(--light-gray);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mini-footer p {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: var(--border-gray);
+}
+
+/* ========================================
+   SECTION 10: BRAND VOICE
+   ======================================== */
+.voice-section {
+  background: var(--light-gray);
+}
+
+.voice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 48px;
+}
+
+.voice-card {
+  background: var(--white);
+  border: 1px solid var(--mid-gray);
+  border-radius: 4px;
+  padding: 40px;
+}
+
+.voice-card-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--light-gray);
+}
+
+.voice-card-label.do {
+  color: var(--forest);
+}
+
+.voice-card-label.dont {
+  color: #C62828;
+}
+
+.voice-example {
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--light-gray);
+}
+
+.voice-example:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.voice-context {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--dark-muted);
+  margin-bottom: 8px;
+}
+
+.voice-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: var(--dark);
+  line-height: 1.6;
+}
+
+.voice-text.muted {
+  color: var(--dark-muted);
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.voice-principles {
+  grid-column: 1 / -1;
+  margin-top: 16px;
+}
+
+.principles-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--mid-gray);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.principle {
+  background: var(--white);
+  padding: 32px;
+  text-align: center;
+}
+
+.principle-number {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--mid-gray);
+  margin-bottom: 12px;
+}
+
+.principle-word {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--dark);
+  margin-bottom: 8px;
+}
+
+.principle-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: var(--dark-muted);
+  line-height: 1.5;
+}
+
+/* ========================================
+   FOOTER
+   ======================================== */
+.page-footer {
+  padding: 60px 0;
+  text-align: center;
+  border-top: 1px solid var(--mid-gray);
+}
+
+.footer-text {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--border-gray);
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 24px;
+  }
+
+  .section {
+    padding: 64px 0;
+  }
+
+  .hero-meta {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .mood-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .color-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .type-scale-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .type-scale-meta {
+    flex: none;
+  }
+
+  .button-row {
+    flex-wrap: wrap;
+  }
+
+  .button-row-label {
+    flex: 0 0 100%;
+    margin-bottom: 8px;
+  }
+
+  .component-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .photo-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .photo-direction {
+    grid-template-columns: 1fr;
+  }
+
+  .logo-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .voice-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .principles-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .mini-nav-links {
+    display: none;
+  }
+
+  .mini-features {
+    grid-template-columns: 1fr;
+  }
+
+  .mini-cta-form {
+    flex-direction: column;
+  }
+
+  .mini-footer {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .navbar-links {
+    display: none;
+  }
+
+  .section-title {
+    font-size: 28px;
+  }
+
+  .form-demo > div:first-child {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .color-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .principles-row {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
 </head>
 <body>
 
-  <!-- ======================================
-       NAVIGATION
-       ====================================== -->
-  <nav class="nav">
-    <div class="nav-inner">
-      <div class="nav-brand">247GolfSimulator</div>
-      <ul class="nav-links">
-        <li><a href="#palette">Colors</a></li>
-        <li><a href="#typography">Type</a></li>
-        <li><a href="#mood">Mood</a></li>
-        <li><a href="#components">Components</a></li>
-        <li><a href="#logos">Logos</a></li>
-        <li><a href="#" class="nav-cta">Get Started</a></li>
-      </ul>
+<!-- ==========================================
+     SECTION 1: HERO
+     ========================================== -->
+<section class="hero">
+  <div class="grid-overlay"></div>
+  <div class="hero-content fade-in">
+    <div class="hero-badge">Concept 02</div>
+    <h1 class="hero-title">247<span class="green">Golf</span></h1>
+    <p class="hero-concept">Precision Play</p>
+    <p class="hero-tagline">Clean modern design. Swiss precision. Every element aligned, every detail intentional. Less is more.</p>
+    <div class="hero-meta">
+      <span><span class="dot"></span> Clean Modern</span>
+      <span><span class="dot"></span> Swiss Inspired</span>
+      <span><span class="dot"></span> Grid System</span>
     </div>
-  </nav>
+  </div>
+</section>
 
-  <!-- ======================================
-       COVER
-       ====================================== -->
-  <section class="cover" id="cover">
-    <div class="cover-content fade-in">
-      <p class="cover-label">Brand Direction: Precision Play</p>
-      <h1 class="cover-title">247Golf<wbr>Simulator</h1>
-      <p class="cover-tagline">Golf on your time</p>
-      <div class="cover-accent"></div>
+<!-- ==========================================
+     SECTION 2: MOOD & POSITIONING
+     ========================================== -->
+<section class="section mood-section">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">Mood &amp; Positioning</div>
+      <h2 class="section-title">Swiss Modernist Clarity</h2>
+      <p class="section-subtitle">A design studio approach. Clean lines, mathematical precision, everything aligned to a grid. Calm confidence through clarity.</p>
     </div>
-  </section>
 
-  <!-- ======================================
-       COLOR PALETTE
-       ====================================== -->
-  <section class="bg-sage" id="palette">
-    <div class="section-inner fade-in">
-      <p class="section-label">01 / Color Palette</p>
-      <h2 class="section-title">Clean, grounded colors</h2>
-      <p class="section-subtitle">A restrained palette rooted in forest green and white. Every color earns its place.</p>
+    <div class="mood-grid fade-in">
+      <div class="mood-cell">
+        <div class="mood-cell-label">Aesthetic</div>
+        <div class="mood-cell-value">Swiss Design Studio</div>
+        <div class="mood-cell-desc">Precision engineering meets editorial restraint. Every pixel serves a purpose.</div>
+      </div>
+      <div class="mood-cell">
+        <div class="mood-cell-label">Feeling</div>
+        <div class="mood-cell-value">Calm Confidence</div>
+        <div class="mood-cell-desc">No noise. No clutter. The quality speaks through what is not there.</div>
+      </div>
+      <div class="mood-cell">
+        <div class="mood-cell-label">Audience</div>
+        <div class="mood-cell-value">Detail-Oriented</div>
+        <div class="mood-cell-desc">Golfers who appreciate technique, gear reviews, and the science of the game.</div>
+      </div>
+      <div class="mood-cell">
+        <div class="mood-cell-label">Differentiator</div>
+        <div class="mood-cell-value">Grid-Locked Precision</div>
+        <div class="mood-cell-desc">When competitors are loud, we are precise. The grid is the brand.</div>
+      </div>
+    </div>
 
-      <div class="palette-stripes">
-        <div class="palette-stripe">
-          <div class="palette-info">
-            <span class="palette-name">White</span>
-            <span class="palette-hex">#FFFFFF</span>
+    <div class="mood-statement fade-in">
+      <blockquote>Less is more, but what's there is perfect.</blockquote>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ==========================================
+     SECTION 3: COLOR PALETTE
+     ========================================== -->
+<section class="section">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">Color System</div>
+      <h2 class="section-title">Restrained Palette</h2>
+      <p class="section-subtitle">Five colors. No gradients. Each with a defined role and tested contrast ratio.</p>
+    </div>
+
+    <div class="color-grid fade-in">
+      <div class="color-card">
+        <div class="color-swatch white-swatch" style="background: #FFFFFF;"></div>
+        <div class="color-name">White</div>
+        <div class="color-hex">#FFFFFF</div>
+        <div class="color-role">Background</div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background: #1B5E20;"></div>
+        <div class="color-name">Forest Green</div>
+        <div class="color-hex">#1B5E20</div>
+        <div class="color-role">Primary</div>
+        <div class="color-contrast">7.1 : 1 on white</div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background: #F5F5F5;"></div>
+        <div class="color-name">Light Gray</div>
+        <div class="color-hex">#F5F5F5</div>
+        <div class="color-role">Surface</div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background: #1A1A1A;"></div>
+        <div class="color-name">Dark</div>
+        <div class="color-hex">#1A1A1A</div>
+        <div class="color-role">Text</div>
+        <div class="color-contrast">16.6 : 1 on white</div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background: #FFB300;"></div>
+        <div class="color-name">Amber</div>
+        <div class="color-hex">#FFB300</div>
+        <div class="color-role">Accent</div>
+        <div class="color-contrast">2.1 : 1 on white</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ==========================================
+     SECTION 4: TYPOGRAPHY
+     ========================================== -->
+<section class="section type-section">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">Typography</div>
+      <h2 class="section-title">Type Scale</h2>
+      <p class="section-subtitle">Space Grotesk for structure. Inter for readability. Two families, zero ambiguity.</p>
+    </div>
+
+    <div class="type-showcase fade-in">
+      <div class="type-family-block">
+        <div class="type-family-name">Space Grotesk -- Headings &amp; UI</div>
+        <div class="type-scale-row">
+          <div class="type-scale-meta">H1 / 48px / 700</div>
+          <div class="type-scale-sample type-sample-h1">Precision Play</div>
+        </div>
+        <div class="type-scale-row">
+          <div class="type-scale-meta">H2 / 36px / 600</div>
+          <div class="type-scale-sample type-sample-h2">Book Your Session</div>
+        </div>
+        <div class="type-scale-row">
+          <div class="type-scale-meta">H3 / 24px / 600</div>
+          <div class="type-scale-sample type-sample-h3">Private Bay Rental</div>
+        </div>
+        <div class="type-scale-row">
+          <div class="type-scale-meta">H4 / 18px / 500</div>
+          <div class="type-scale-sample type-sample-h4">Available 24 Hours, 7 Days a Week</div>
+        </div>
+        <div class="type-scale-row">
+          <div class="type-scale-meta">Caption / 11px / 500</div>
+          <div class="type-scale-sample type-sample-caption">Indoor Golf Simulator &mdash; Est. 2024</div>
+        </div>
+      </div>
+
+      <div class="type-family-block">
+        <div class="type-family-name">Inter -- Body &amp; Long-form</div>
+        <div class="type-scale-row">
+          <div class="type-scale-meta">Body / 16px / 400</div>
+          <div class="type-scale-sample type-sample-body">Professional-grade simulators with Trackman and Foresight technology. Practice your swing, play world-famous courses, or host a private event in a controlled environment.</div>
+        </div>
+        <div class="type-scale-row">
+          <div class="type-scale-meta">Body SM / 14px / 400</div>
+          <div class="type-scale-sample type-sample-body-sm">All bays include club rentals, complimentary refreshments, and real-time shot analytics displayed on a 4K screen.</div>
+        </div>
+      </div>
+
+      <div class="brand-copy-block">
+        <div class="type-family-name">Brand Copy Samples</div>
+        <div class="copy-example">
+          <div class="copy-label">Homepage Headline</div>
+          <div class="copy-headline">Your game. Perfected.</div>
+          <div class="copy-body">Professional simulators. Private bays. Open around the clock.</div>
+        </div>
+        <div class="copy-example">
+          <div class="copy-label">Booking CTA</div>
+          <div class="copy-headline">Book a bay. Show up. Play.</div>
+          <div class="copy-body">No memberships. No waitlists. Reserve online in under 30 seconds.</div>
+        </div>
+        <div class="copy-example">
+          <div class="copy-label">About Section</div>
+          <div class="copy-headline">Built for serious golfers.</div>
+          <div class="copy-body">Trackman accuracy. Foresight precision. The same technology used by PGA tour professionals, available any hour of any day.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ==========================================
+     SECTION 5: BUTTONS
+     ========================================== -->
+<section class="section">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">Interactive Elements</div>
+      <h2 class="section-title">Button System</h2>
+      <p class="section-subtitle">Three variants. Consistent 2px border radius. Hover states that communicate without theatrics.</p>
+    </div>
+
+    <div class="button-showcase fade-in">
+      <div class="button-row">
+        <div class="button-row-label">Primary</div>
+        <button class="btn btn-primary btn-sm">Small</button>
+        <button class="btn btn-primary">Book a Bay</button>
+        <button class="btn btn-primary btn-lg">Get Started</button>
+      </div>
+
+      <div class="button-row">
+        <div class="button-row-label">Secondary</div>
+        <button class="btn btn-secondary btn-sm">Small</button>
+        <button class="btn btn-secondary">View Pricing</button>
+        <button class="btn btn-secondary btn-lg">Learn More</button>
+      </div>
+
+      <div class="button-row">
+        <div class="button-row-label">Ghost</div>
+        <button class="btn btn-ghost btn-sm">Details</button>
+        <button class="btn btn-ghost">See All Courses</button>
+        <button class="btn btn-ghost btn-lg">Read More</button>
+      </div>
+
+      <div class="button-row dark-row">
+        <div class="button-row-label">On Dark</div>
+        <button class="btn btn-white btn-sm">Small</button>
+        <button class="btn btn-white">Book Now</button>
+        <button class="btn btn-white btn-lg">Reserve</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ==========================================
+     SECTION 6: COMPONENTS
+     ========================================== -->
+<section class="section component-section">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">Components</div>
+      <h2 class="section-title">UI Building Blocks</h2>
+      <p class="section-subtitle">Modular components on white and light gray surfaces. Green accents for interactive elements.</p>
+    </div>
+
+    <div class="component-grid fade-in">
+      <!-- Navbar -->
+      <div class="comp-navbar">
+        <div class="comp-navbar-label">Navigation Bar</div>
+        <div class="navbar-demo">
+          <div class="navbar-logo">247<span>Golf</span></div>
+          <ul class="navbar-links">
+            <li><a href="#" class="active">Home</a></li>
+            <li><a href="#">Simulators</a></li>
+            <li><a href="#">Pricing</a></li>
+            <li><a href="#">Events</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+          <div class="navbar-cta">
+            <button class="btn btn-primary">Book Now</button>
           </div>
         </div>
-        <div class="palette-stripe">
-          <div class="palette-info">
-            <span class="palette-name">Deep Forest</span>
-            <span class="palette-hex">#1B4332</span>
+      </div>
+
+      <!-- Card -->
+      <div class="comp-card-wrapper">
+        <div class="comp-card-label">Content Card</div>
+        <div class="card-demo">
+          <div class="card">
+            <div class="card-image">
+              <img src="https://images.pexels.com/photos/114972/pexels-photo-114972.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Golf course" loading="lazy">
+            </div>
+            <div class="card-body">
+              <div class="card-tag">Featured Course</div>
+              <div class="card-title">Pebble Beach Golf Links</div>
+              <div class="card-desc">Play the iconic coastal course from your private bay. Full 18 holes with real-time wind simulation.</div>
+            </div>
           </div>
         </div>
-        <div class="palette-stripe">
-          <div class="palette-info">
-            <span class="palette-name">Light Sage</span>
-            <span class="palette-hex">#F0F7F4</span>
+      </div>
+
+      <!-- Pricing Card -->
+      <div class="comp-card-wrapper">
+        <div class="comp-card-label">Pricing Card</div>
+        <div class="pricing-demo">
+          <div class="pricing-card featured">
+            <div class="pricing-tier">Standard Bay</div>
+            <div class="pricing-amount"><span>$</span>55<span>/hr</span></div>
+            <div class="pricing-period">Per bay, up to 6 players</div>
+            <ul class="pricing-features">
+              <li>Trackman 4 launch monitor</li>
+              <li>200+ virtual courses</li>
+              <li>Club rentals included</li>
+              <li>Real-time shot analytics</li>
+              <li>Complimentary refreshments</li>
+            </ul>
+            <button class="btn btn-primary" style="width: 100%;">Reserve Bay</button>
           </div>
         </div>
-        <div class="palette-stripe">
-          <div class="palette-info">
-            <span class="palette-name">Near Black</span>
-            <span class="palette-hex">#111111</span>
+      </div>
+
+      <!-- Form -->
+      <div class="comp-card-wrapper" style="grid-column: 1 / -1;">
+        <div class="comp-card-label">Form Elements</div>
+        <div class="form-demo">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-input" placeholder="Jane Smith">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" placeholder="jane@example.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date</label>
+              <input type="text" class="form-input" placeholder="2026-04-15">
+              <div class="form-hint">Format: YYYY-MM-DD</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Number of Players</label>
+              <input type="text" class="form-input" placeholder="1 - 6">
+            </div>
           </div>
-        </div>
-        <div class="palette-stripe">
-          <div class="palette-info">
-            <span class="palette-name">Medium Gray</span>
-            <span class="palette-hex">#6B7280</span>
+          <div style="margin-top: 20px;">
+            <button class="btn btn-primary">Submit Reservation</button>
+            <button class="btn btn-ghost">Cancel</button>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ======================================
-       TYPOGRAPHY
-       ====================================== -->
-  <section class="bg-white" id="typography">
-    <div class="section-inner fade-in">
-      <p class="section-label">02 / Typography</p>
-      <h2 class="section-title">Three faces, clear roles</h2>
-      <p class="section-subtitle">Space Grotesk for impact. Inter for reading. JetBrains Mono for data and labels.</p>
+<div class="divider"></div>
 
-      <div class="type-cards">
-        <!-- Space Grotesk -->
-        <div class="type-card">
-          <p class="type-card-label">Space Grotesk &mdash; Headings</p>
-          <div class="type-specimen-row">
-            <p class="type-specimen-size">64px / Bold</p>
-            <p class="type-space-grotesk" style="font-size: 48px; font-weight: 700; line-height: 1.1;">Play Anytime</p>
-          </div>
-          <div class="type-specimen-row">
-            <p class="type-specimen-size">40px / SemiBold</p>
-            <p class="type-space-grotesk" style="font-size: 32px; font-weight: 600; line-height: 1.15;">Precision Matters</p>
-          </div>
-          <div class="type-specimen-row">
-            <p class="type-specimen-size">24px / Medium</p>
-            <p class="type-space-grotesk" style="font-size: 22px; font-weight: 500; line-height: 1.3;">Every Detail Counts</p>
-          </div>
-          <div class="type-specimen-row">
-            <p class="type-specimen-size">Character Set</p>
-            <p class="type-space-grotesk" style="font-size: 18px; font-weight: 400; line-height: 1.4;">ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz<br>0123456789 &amp; ! ? # @ $</p>
+<!-- ==========================================
+     SECTION 7: PHOTOGRAPHY DIRECTION
+     ========================================== -->
+<section class="section grid-bg">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">Photography</div>
+      <h2 class="section-title">Visual Direction</h2>
+      <p class="section-subtitle">Clean, well-lit, controlled compositions. Desaturated slightly for cohesion. White borders enforce the grid.</p>
+    </div>
+
+    <div class="photo-grid fade-in">
+      <div class="photo-cell">
+        <img src="https://images.pexels.com/photos/114972/pexels-photo-114972.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Golf course landscape" loading="lazy">
+        <div class="photo-cell-caption">
+          <div class="photo-cell-title">Course Landscape</div>
+          <div class="photo-cell-desc">Wide, clean composition. Natural light. No distractions.</div>
+        </div>
+      </div>
+      <div class="photo-cell">
+        <img src="https://images.pexels.com/photos/164250/pexels-photo-164250.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Golf ball close-up" loading="lazy">
+        <div class="photo-cell-caption">
+          <div class="photo-cell-title">Equipment Detail</div>
+          <div class="photo-cell-desc">Tight crop. Shallow depth of field. Product-style isolation.</div>
+        </div>
+      </div>
+      <div class="photo-cell">
+        <img src="https://images.pexels.com/photos/6572968/pexels-photo-6572968.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Indoor simulator" loading="lazy">
+        <div class="photo-cell-caption">
+          <div class="photo-cell-title">Simulator Environment</div>
+          <div class="photo-cell-desc">Controlled lighting. Screen glow balanced with ambient fill.</div>
+        </div>
+      </div>
+      <div class="photo-cell">
+        <img src="https://images.pexels.com/photos/6572962/pexels-photo-6572962.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Player in simulator" loading="lazy">
+        <div class="photo-cell-caption">
+          <div class="photo-cell-title">Player in Action</div>
+          <div class="photo-cell-desc">Mid-swing capture. Clean background. Focus on form.</div>
+        </div>
+      </div>
+      <div class="photo-cell">
+        <img src="https://images.pexels.com/photos/6256827/pexels-photo-6256827.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Social group playing" loading="lazy">
+        <div class="photo-cell-caption">
+          <div class="photo-cell-title">Social Setting</div>
+          <div class="photo-cell-desc">Relaxed candid. Natural expressions. No staged poses.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="photo-direction fade-in">
+      <div class="photo-rule">
+        <div class="photo-rule-num">01</div>
+        <div class="photo-rule-title">Controlled Light</div>
+        <div class="photo-rule-desc">Even, diffused lighting. No harsh shadows. Studio quality, even in environmental shots.</div>
+      </div>
+      <div class="photo-rule">
+        <div class="photo-rule-num">02</div>
+        <div class="photo-rule-title">Tight Composition</div>
+        <div class="photo-rule-desc">Rule of thirds. Generous negative space. Let the subject breathe within the frame.</div>
+      </div>
+      <div class="photo-rule">
+        <div class="photo-rule-num">03</div>
+        <div class="photo-rule-title">Reduced Saturation</div>
+        <div class="photo-rule-desc">Pull saturation 10-15%. Greens stay true but everything else recedes. Clinical, not cold.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ==========================================
+     SECTION 8: LOGO PLACEHOLDER
+     ========================================== -->
+<section class="section logo-section">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">Brand Mark</div>
+      <h2 class="section-title">Logo System</h2>
+      <p class="section-subtitle">Three lockups. Icon, wordmark, and combined. Designed for clarity at every scale.</p>
+    </div>
+
+    <div class="logo-grid fade-in">
+      <!-- Icon -->
+      <div class="logo-container">
+        <img src="images/concept-2-icon.png" alt="247Golf icon"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="logo-placeholder" style="display: none;">
+          <div class="logo-placeholder-icon">247</div>
+        </div>
+        <div class="logo-label">Icon Mark</div>
+        <div class="logo-file">concept-2-icon.png</div>
+      </div>
+
+      <!-- Wordmark -->
+      <div class="logo-container">
+        <img src="images/concept-2-wordmark.png" alt="247Golf wordmark"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="logo-placeholder" style="display: none;">
+          <div class="logo-placeholder-icon">247Golf</div>
+          <div class="logo-placeholder-sub">Simulator</div>
+        </div>
+        <div class="logo-label">Wordmark</div>
+        <div class="logo-file">concept-2-wordmark.png</div>
+      </div>
+
+      <!-- Combined on dark -->
+      <div class="logo-container dark">
+        <img src="images/concept-2-combined.png" alt="247Golf combined mark"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="logo-placeholder" style="display: none;">
+          <div class="logo-placeholder-icon">247Golf</div>
+          <div class="logo-placeholder-sub">Simulator</div>
+        </div>
+        <div class="logo-label">Combined / Reversed</div>
+        <div class="logo-file">concept-2-combined.png</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ==========================================
+     SECTION 9: MINI WEBSITE MOCKUP
+     ========================================== -->
+<section class="section">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">Application</div>
+      <h2 class="section-title">Homepage Preview</h2>
+      <p class="section-subtitle">The full design system applied. White canvas, green accents, grid structure.</p>
+    </div>
+
+    <div class="mockup-frame fade-in">
+      <div class="mockup-browser">
+        <div class="mockup-dots">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="mockup-url">247golfsimulator.com</div>
+      </div>
+
+      <div class="mockup-content">
+        <!-- Mini Nav -->
+        <div class="mini-nav">
+          <div class="mini-nav-logo">247<span>Golf</span></div>
+          <ul class="mini-nav-links">
+            <li>Simulators</li>
+            <li>Pricing</li>
+            <li>Events</li>
+            <li>Contact</li>
+          </ul>
+          <button class="mini-nav-btn">Book Now</button>
+        </div>
+
+        <!-- Mini Hero -->
+        <div class="mini-hero">
+          <h2>Your game. <span>Perfected.</span></h2>
+          <p>Professional-grade simulators. Private bays. Open 24/7. No membership required.</p>
+          <div class="mini-hero-btns">
+            <button class="btn btn-primary btn-sm">Reserve a Bay</button>
+            <button class="btn btn-secondary btn-sm">View Pricing</button>
           </div>
         </div>
 
-        <!-- Inter -->
-        <div class="type-card">
-          <p class="type-card-label">Inter &mdash; Body</p>
-          <div class="type-specimen-row">
-            <p class="type-specimen-size">17px / Regular</p>
-            <p class="type-inter" style="font-size: 17px; font-weight: 400; line-height: 1.7; max-width: 600px;">Professional golf simulation that respects your schedule. Book a bay, pick up a club, and play a full 18 holes in under an hour. No tee times. No weather delays. Just golf.</p>
+        <!-- Mini Features -->
+        <div class="mini-features">
+          <div class="mini-feature">
+            <div class="mini-feature-icon">T</div>
+            <h3>Trackman Technology</h3>
+            <p>Tour-level accuracy. Every shot measured, analyzed, and displayed in real time.</p>
           </div>
-          <div class="type-specimen-row">
-            <p class="type-specimen-size">14px / Medium</p>
-            <p class="type-inter" style="font-size: 14px; font-weight: 500; line-height: 1.6; color: var(--gray);">Available 24/7 with high-accuracy launch monitors and course-quality projection.</p>
+          <div class="mini-feature">
+            <div class="mini-feature-icon">24</div>
+            <h3>Always Open</h3>
+            <p>Book any hour, any day. Early morning warm-ups or late night rounds.</p>
           </div>
-          <div class="type-specimen-row">
-            <p class="type-specimen-size">13px / SemiBold</p>
-            <p class="type-inter" style="font-size: 13px; font-weight: 600; line-height: 1.5; letter-spacing: 0.01em;">BUTTON LABELS  /  NAVIGATION  /  UI TEXT</p>
+          <div class="mini-feature">
+            <div class="mini-feature-icon">200+</div>
+            <h3>World Courses</h3>
+            <p>Pebble Beach. St Andrews. Augusta. Play them all from your private bay.</p>
           </div>
         </div>
 
-        <!-- JetBrains Mono -->
-        <div class="type-card">
-          <p class="type-card-label">JetBrains Mono &mdash; Data &amp; Labels</p>
-          <div class="type-specimen-row">
-            <p class="type-specimen-size">14px / Regular</p>
-            <p class="type-jetbrains" style="font-size: 14px; font-weight: 400; line-height: 1.8;">SWING SPEED: 112 MPH<br>CARRY: 287 YDS<br>SPIN RATE: 2,340 RPM<br>LAUNCH ANGLE: 14.2&deg;</p>
+        <!-- Mini CTA -->
+        <div class="mini-cta">
+          <h3>Ready to play? Reserve your bay now.</h3>
+          <div class="mini-cta-form">
+            <input type="text" placeholder="Enter your email">
+            <button>Book Now</button>
           </div>
-          <div class="type-specimen-row">
-            <p class="type-specimen-size">11px / Medium</p>
-            <p class="type-jetbrains" style="font-size: 11px; font-weight: 500; letter-spacing: 0.06em; color: var(--gray); line-height: 1.6;">SECTION LABELS  /  METADATA  /  TIMESTAMPS  /  STATUS CODES</p>
+        </div>
+
+        <!-- Mini Footer -->
+        <div class="mini-footer">
+          <p>247GolfSimulator</p>
+          <p>Open 24/7 &mdash; Walk-ins welcome</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ==========================================
+     SECTION 10: BRAND VOICE
+     ========================================== -->
+<section class="section voice-section">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">Brand Voice</div>
+      <h2 class="section-title">Clean. Direct. No Fluff.</h2>
+      <p class="section-subtitle">Short sentences. Active voice. Say exactly what you mean, then stop.</p>
+    </div>
+
+    <div class="voice-grid fade-in">
+      <!-- Do -->
+      <div class="voice-card">
+        <div class="voice-card-label do">This</div>
+        <div class="voice-example">
+          <div class="voice-context">Homepage Headline</div>
+          <div class="voice-text">Your game. Perfected.</div>
+        </div>
+        <div class="voice-example">
+          <div class="voice-context">Booking Page</div>
+          <div class="voice-text">Pick a time. Pick a bay. Done.</div>
+        </div>
+        <div class="voice-example">
+          <div class="voice-context">Feature Description</div>
+          <div class="voice-text">Trackman 4 launch monitor. Tour-level accuracy in every bay.</div>
+        </div>
+        <div class="voice-example">
+          <div class="voice-context">Email Subject</div>
+          <div class="voice-text">Your bay is confirmed for Saturday at 8pm.</div>
+        </div>
+      </div>
+
+      <!-- Don't -->
+      <div class="voice-card">
+        <div class="voice-card-label dont">Not This</div>
+        <div class="voice-example">
+          <div class="voice-context">Homepage Headline</div>
+          <div class="voice-text muted">Welcome to the ultimate golfing experience that will transform how you play!</div>
+        </div>
+        <div class="voice-example">
+          <div class="voice-context">Booking Page</div>
+          <div class="voice-text muted">We make it incredibly easy for you to book your amazing golf simulator session!</div>
+        </div>
+        <div class="voice-example">
+          <div class="voice-context">Feature Description</div>
+          <div class="voice-text muted">Our state-of-the-art, cutting-edge Trackman technology delivers an unparalleled experience.</div>
+        </div>
+        <div class="voice-example">
+          <div class="voice-context">Email Subject</div>
+          <div class="voice-text muted">Exciting news! Your amazing golf simulator booking is all set!</div>
+        </div>
+      </div>
+
+      <!-- Principles -->
+      <div class="voice-principles">
+        <div class="principles-row">
+          <div class="principle">
+            <div class="principle-number">01</div>
+            <div class="principle-word">Direct</div>
+            <div class="principle-desc">Say it in fewer words. Then cut three more.</div>
+          </div>
+          <div class="principle">
+            <div class="principle-number">02</div>
+            <div class="principle-word">Confident</div>
+            <div class="principle-desc">No hedging. No "we believe." State facts.</div>
+          </div>
+          <div class="principle">
+            <div class="principle-number">03</div>
+            <div class="principle-word">Useful</div>
+            <div class="principle-desc">Every sentence gives the reader something. Information, direction, or value.</div>
+          </div>
+          <div class="principle">
+            <div class="principle-number">04</div>
+            <div class="principle-word">Quiet</div>
+            <div class="principle-desc">No exclamation marks. No superlatives. Let quality speak.</div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ======================================
-       MOOD BOARD
-       ====================================== -->
-  <section class="bg-sage" id="mood">
-    <div class="section-inner fade-in">
-      <p class="section-label">03 / Mood Board</p>
-      <h2 class="section-title">The feel of the brand</h2>
-      <p class="section-subtitle">Clean lines, natural light, focused composition. Golf as a quiet act of precision.</p>
+<!-- ==========================================
+     FOOTER
+     ========================================== -->
+<footer class="page-footer">
+  <div class="container">
+    <p class="footer-text">247GolfSimulator &mdash; Concept 2: Precision Play &mdash; Brand Presentation</p>
+  </div>
+</footer>
 
-      <div class="mood-grid">
-        <div class="mood-img mood-img-large">
-          <img src="https://images.pexels.com/photos/164250/pexels-photo-164250.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Golf course wide shot" loading="lazy">
-        </div>
-        <div class="mood-img">
-          <img src="https://images.pexels.com/photos/6256827/pexels-photo-6256827.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Golf detail shot" loading="lazy">
-        </div>
-        <div class="mood-img">
-          <img src="https://images.pexels.com/photos/13061477/pexels-photo-13061477.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Golf atmosphere" loading="lazy">
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================================
-       COMPONENTS
-       ====================================== -->
-  <section class="bg-white" id="components">
-    <div class="section-inner fade-in">
-      <p class="section-label">04 / Components</p>
-      <h2 class="section-title">Interface building blocks</h2>
-      <p class="section-subtitle">Buttons, inputs, and form elements that carry the brand through every interaction.</p>
-
-      <div class="components-grid">
-        <!-- Buttons -->
-        <div class="component-group">
-          <h3>Buttons</h3>
-          <div class="btn-row">
-            <button class="btn btn-primary">Book a Session</button>
-            <button class="btn btn-outline">View Pricing</button>
-            <button class="btn btn-ghost">Learn More</button>
-          </div>
-        </div>
-
-        <!-- Form Inputs -->
-        <div class="component-group">
-          <h3>Form Inputs</h3>
-          <div class="form-group">
-            <label class="form-label" for="input-name">Full Name</label>
-            <input type="text" id="input-name" class="form-input" placeholder="Enter your name">
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="input-email">Email Address</label>
-            <input type="email" id="input-email" class="form-input" placeholder="you@example.com">
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="input-select">Preferred Bay</label>
-            <select id="input-select" class="form-select">
-              <option value="" disabled selected>Select a bay</option>
-              <option value="1">Bay 1 &mdash; TrackMan</option>
-              <option value="2">Bay 2 &mdash; Foresight</option>
-              <option value="3">Bay 3 &mdash; Full Swing</option>
-            </select>
-          </div>
-          <button class="btn btn-primary" style="width: 100%; margin-top: 4px;">Reserve Now</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================================
-       LOGO CONCEPTS
-       ====================================== -->
-  <section class="bg-sage" id="logos">
-    <div class="section-inner fade-in">
-      <p class="section-label">05 / Logo Concepts</p>
-      <h2 class="section-title">Identity explorations</h2>
-      <p class="section-subtitle">Early directions ranging from abstract icon to clean wordmark. All rooted in the Precision Play sensibility.</p>
-
-      <div class="logo-grid">
-        <div class="logo-card">
-          <img src="images/concept-2-icon.png" alt="Abstract icon concept" loading="lazy">
-          <div class="logo-card-caption">
-            <p>Geometric Icon &mdash; Abstract flag mark</p>
-          </div>
-        </div>
-        <div class="logo-card">
-          <img src="images/concept-2-wordmark.png" alt="Typography logo concept" loading="lazy">
-          <div class="logo-card-caption">
-            <p>Typography &mdash; Space Grotesk wordmark</p>
-          </div>
-        </div>
-        <div class="logo-card">
-          <img src="images/concept-2-combined.png" alt="Combined logo concept" loading="lazy">
-          <div class="logo-card-caption">
-            <p>Combined &mdash; Icon + wordmark lockup</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================================
-       FOOTER
-       ====================================== -->
-  <footer class="footer">
-    <p>247GolfSimulator &mdash; Precision Play Brand Direction &mdash; Concept 2</p>
-  </footer>
-
-  <!-- ======================================
-       SCROLL ANIMATION
-       ====================================== -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      var elements = document.querySelectorAll('.fade-in');
-
-      var observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, {
-        threshold: 0.15,
-        rootMargin: '0px 0px -40px 0px'
-      });
-
-      elements.forEach(function (el) {
-        observer.observe(el);
-      });
+<!-- ==========================================
+     INTERSECTION OBSERVER FOR FADE-INS
+     ========================================== -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var elements = document.querySelectorAll('.fade-in');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
     });
-  </script>
+  }, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -40px 0px'
+  });
+  elements.forEach(function(el) {
+    observer.observe(el);
+  });
+});
+</script>
 
 </body>
 </html>

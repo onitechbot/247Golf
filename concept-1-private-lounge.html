@@ -1,1039 +1,2366 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>247GolfSimulator — The Private Lounge</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
-    <style>
-        /* ============================================
-           247GolfSimulator — The Private Lounge
-           Brand Concept Presentation
-           ============================================ */
-
-        *, *::before, *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --black: #0A0A0A;
-            --charcoal: #1C1C1C;
-            --champagne: #D4C5A0;
-            --ivory: #FAF6ED;
-            --champagne-muted: #B8AD8E;
-            --charcoal-light: #2A2A2A;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            background: var(--black);
-        }
-
-        body {
-            font-family: 'Lato', sans-serif;
-            background: var(--black);
-            color: var(--ivory);
-            line-height: 1.6;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        /* Grain texture overlay on entire page */
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9999;
-            opacity: 0.035;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            background-repeat: repeat;
-            background-size: 256px 256px;
-        }
-
-        /* ---- Top Navigation ---- */
-        .top-nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            padding: 0 48px;
-            height: 72px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(10, 10, 10, 0.6);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-bottom: 1px solid rgba(212, 197, 160, 0.08);
-            transition: background 0.4s ease, height 0.4s ease;
-        }
-
-        .top-nav.scrolled {
-            background: rgba(10, 10, 10, 0.92);
-            height: 60px;
-        }
-
-        .nav-brand {
-            font-family: 'Playfair Display', serif;
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--champagne);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 36px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            font-family: 'Lato', sans-serif;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 2.5px;
-            text-transform: uppercase;
-            color: var(--ivory);
-            text-decoration: none;
-            position: relative;
-            padding-bottom: 4px;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background: var(--champagne);
-            transition: width 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
-
-        .nav-links a:hover {
-            color: var(--champagne);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        /* ---- Section Base ---- */
-        .section {
-            min-height: 100vh;
-            position: relative;
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-
-        .section.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .section-label {
-            font-family: 'Lato', sans-serif;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: var(--champagne-muted);
-            text-align: center;
-            margin-bottom: 16px;
-        }
-
-        .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(32px, 4vw, 56px);
-            font-weight: 400;
-            color: var(--ivory);
-            text-align: center;
-            margin-bottom: 60px;
-            line-height: 1.2;
-        }
-
-        /* ============================================
-           SECTION 1: COVER
-           ============================================ */
-        .cover {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 48px;
-            position: relative;
-            background: var(--black);
-        }
-
-        /* Soft radial vignette */
-        .cover::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at center, transparent 30%, rgba(10, 10, 10, 0.7) 100%);
-            pointer-events: none;
-        }
-
-        .cover-direction {
-            font-family: 'Lato', sans-serif;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            color: var(--champagne-muted);
-            margin-bottom: 48px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .cover-brand {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(48px, 8vw, 120px);
-            font-weight: 700;
-            color: var(--ivory);
-            line-height: 1;
-            letter-spacing: -1px;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-            margin-bottom: 24px;
-        }
-
-        .cover-tagline {
-            font-family: 'Lato', sans-serif;
-            font-size: clamp(16px, 2vw, 24px);
-            font-weight: 300;
-            color: var(--champagne);
-            letter-spacing: 6px;
-            text-transform: uppercase;
-            position: relative;
-            z-index: 1;
-            margin-bottom: 80px;
-        }
-
-        .cover-line {
-            width: 1px;
-            height: 80px;
-            background: linear-gradient(to bottom, var(--champagne), transparent);
-            position: relative;
-            z-index: 1;
-        }
-
-        /* ============================================
-           SECTION 2: COLOR PALETTE
-           ============================================ */
-        .palette {
-            padding: 120px 0 0;
-            min-height: 100vh;
-        }
-
-        .palette-columns {
-            display: flex;
-            width: 100%;
-            height: 70vh;
-            min-height: 500px;
-        }
-
-        .palette-col {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 40px 32px;
-            position: relative;
-            transition: flex 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
-
-        .palette-col:hover {
-            flex: 1.4;
-        }
-
-        .palette-col--black {
-            background: #0A0A0A;
-        }
-
-        .palette-col--charcoal {
-            background: #1C1C1C;
-        }
-
-        .palette-col--champagne {
-            background: #D4C5A0;
-        }
-
-        .palette-col--ivory {
-            background: #FAF6ED;
-        }
-
-        .palette-col .color-name {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(20px, 2.5vw, 32px);
-            font-weight: 500;
-            margin-bottom: 8px;
-        }
-
-        .palette-col .color-hex {
-            font-family: 'Lato', sans-serif;
-            font-size: 13px;
-            font-weight: 400;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            opacity: 0.7;
-        }
-
-        .palette-col--black .color-name,
-        .palette-col--black .color-hex,
-        .palette-col--charcoal .color-name,
-        .palette-col--charcoal .color-hex {
-            color: var(--ivory);
-        }
-
-        .palette-col--champagne .color-name,
-        .palette-col--champagne .color-hex,
-        .palette-col--ivory .color-name,
-        .palette-col--ivory .color-hex {
-            color: var(--black);
-        }
-
-        /* ============================================
-           SECTION 3: TYPOGRAPHY
-           ============================================ */
-        .typography {
-            padding: 140px 48px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .type-specimen {
-            max-width: 1000px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .type-group {
-            margin-bottom: 80px;
-        }
-
-        .type-group:last-child {
-            margin-bottom: 0;
-        }
-
-        .type-family-label {
-            font-family: 'Lato', sans-serif;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: var(--champagne-muted);
-            margin-bottom: 40px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid rgba(212, 197, 160, 0.12);
-        }
-
-        .type-row {
-            display: flex;
-            align-items: baseline;
-            gap: 32px;
-            margin-bottom: 24px;
-            padding-bottom: 24px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-        }
-
-        .type-row:last-child {
-            border-bottom: none;
-        }
-
-        .type-meta {
-            flex: 0 0 140px;
-            font-family: 'Lato', sans-serif;
-            font-size: 11px;
-            font-weight: 400;
-            color: var(--champagne-muted);
-            letter-spacing: 1px;
-        }
-
-        .type-sample {
-            flex: 1;
-            color: var(--ivory);
-        }
-
-        .type-sample--hero {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(48px, 6vw, 80px);
-            font-weight: 700;
-            line-height: 1.05;
-        }
-
-        .type-sample--h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(36px, 4vw, 56px);
-            font-weight: 600;
-            line-height: 1.1;
-        }
-
-        .type-sample--h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(28px, 3vw, 40px);
-            font-weight: 500;
-            line-height: 1.2;
-        }
-
-        .type-sample--h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(22px, 2vw, 28px);
-            font-weight: 500;
-            line-height: 1.3;
-        }
-
-        .type-sample--body {
-            font-family: 'Lato', sans-serif;
-            font-size: 17px;
-            font-weight: 400;
-            line-height: 1.7;
-            color: rgba(250, 246, 237, 0.8);
-        }
-
-        .type-sample--small {
-            font-family: 'Lato', sans-serif;
-            font-size: 14px;
-            font-weight: 400;
-            line-height: 1.6;
-            color: rgba(250, 246, 237, 0.6);
-        }
-
-        .type-sample--caption {
-            font-family: 'Lato', sans-serif;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--champagne-muted);
-        }
-
-        /* ============================================
-           SECTION 4: MOOD BOARD
-           ============================================ */
-        .moodboard {
-            padding: 140px 48px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .moodboard-layout {
-            position: relative;
-            max-width: 1100px;
-            margin: 0 auto;
-            width: 100%;
-            height: 70vh;
-            min-height: 500px;
-        }
-
-        .mood-img {
-            position: absolute;
-            overflow: hidden;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
-            transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.6s ease;
-        }
-
-        .mood-img:hover {
-            transform: scale(1.02);
-            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.6);
-            z-index: 10;
-        }
-
-        .mood-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            filter: saturate(0.7) brightness(0.9);
-            transition: filter 0.6s ease;
-        }
-
-        .mood-img:hover img {
-            filter: saturate(0.85) brightness(0.95);
-        }
-
-        .mood-img--1 {
-            width: 45%;
-            height: 80%;
-            top: 5%;
-            left: 0;
-            z-index: 2;
-        }
-
-        .mood-img--2 {
-            width: 40%;
-            height: 60%;
-            top: 0;
-            right: 5%;
-            z-index: 1;
-        }
-
-        .mood-img--3 {
-            width: 38%;
-            height: 55%;
-            bottom: 0;
-            right: 15%;
-            z-index: 3;
-        }
-
-        /* ============================================
-           SECTION 5: COMPONENTS
-           ============================================ */
-        .components {
-            padding: 140px 48px;
-            min-height: 100vh;
-        }
-
-        .components-grid {
-            max-width: 900px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 80px;
-        }
-
-        .comp-group-title {
-            font-family: 'Lato', sans-serif;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: var(--champagne-muted);
-            margin-bottom: 32px;
-        }
-
-        /* Buttons */
-        .btn-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px 40px;
-            font-family: 'Lato', sans-serif;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            border: none;
-            cursor: pointer;
-            transition: all 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
-            text-align: center;
-        }
-
-        .btn--primary {
-            background: var(--champagne);
-            color: var(--black);
-        }
-
-        .btn--primary:hover {
-            background: var(--ivory);
-            box-shadow: 0 8px 32px rgba(212, 197, 160, 0.2);
-        }
-
-        .btn--secondary {
-            background: transparent;
-            color: var(--champagne);
-            border: 1px solid var(--champagne);
-        }
-
-        .btn--secondary:hover {
-            background: var(--champagne);
-            color: var(--black);
-        }
-
-        .btn--ghost {
-            background: transparent;
-            color: var(--ivory);
-            border: 1px solid rgba(250, 246, 237, 0.15);
-        }
-
-        .btn--ghost:hover {
-            border-color: var(--champagne);
-            color: var(--champagne);
-        }
-
-        /* Form Inputs */
-        .input-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .form-field {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .form-label {
-            font-family: 'Lato', sans-serif;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--champagne-muted);
-        }
-
-        .form-input {
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid rgba(212, 197, 160, 0.2);
-            padding: 12px 0;
-            font-family: 'Lato', sans-serif;
-            font-size: 16px;
-            font-weight: 300;
-            color: var(--ivory);
-            outline: none;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-input::placeholder {
-            color: rgba(250, 246, 237, 0.25);
-        }
-
-        .form-input:focus {
-            border-bottom-color: var(--champagne);
-        }
-
-        .form-select {
-            background: transparent;
-            border: 1px solid rgba(212, 197, 160, 0.2);
-            padding: 14px 16px;
-            font-family: 'Lato', sans-serif;
-            font-size: 16px;
-            font-weight: 300;
-            color: var(--ivory);
-            outline: none;
-            cursor: pointer;
-            appearance: none;
-            -webkit-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23D4C5A0' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 16px center;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-select:focus {
-            border-color: var(--champagne);
-        }
-
-        .form-select option {
-            background: var(--charcoal);
-            color: var(--ivory);
-        }
-
-        /* ============================================
-           SECTION 6: LOGO CONCEPTS
-           ============================================ */
-        .logos {
-            padding: 140px 48px;
-            min-height: 100vh;
-        }
-
-        .logo-row {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 40px;
-        }
-
-        .logo-card {
-            background: var(--charcoal);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-        }
-
-        .logo-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
-        }
-
-        .logo-card-img {
-            width: 100%;
-            aspect-ratio: 4 / 3;
-            object-fit: cover;
-            display: block;
-            background: var(--charcoal-light);
-        }
-
-        .logo-card:first-child .logo-card-img {
-            aspect-ratio: 1 / 1;
-            max-height: 320px;
-        }
-
-        .logo-card-caption {
-            padding: 24px;
-            font-family: 'Lato', sans-serif;
-            font-size: 12px;
-            font-weight: 400;
-            color: var(--champagne-muted);
-            letter-spacing: 1px;
-        }
-
-        /* ---- Footer ---- */
-        .footer {
-            padding: 80px 48px 40px;
-            text-align: center;
-            border-top: 1px solid rgba(212, 197, 160, 0.06);
-        }
-
-        .footer-brand {
-            font-family: 'Playfair Display', serif;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--champagne-muted);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-        }
-
-        .footer-note {
-            font-family: 'Lato', sans-serif;
-            font-size: 12px;
-            color: rgba(250, 246, 237, 0.25);
-            letter-spacing: 1px;
-        }
-
-        /* ============================================
-           RESPONSIVE
-           ============================================ */
-        @media (max-width: 900px) {
-            .top-nav {
-                padding: 0 24px;
-            }
-
-            .nav-links {
-                gap: 20px;
-            }
-
-            .nav-links a {
-                font-size: 10px;
-                letter-spacing: 1.5px;
-            }
-
-            .palette-columns {
-                flex-direction: column;
-                height: auto;
-            }
-
-            .palette-col {
-                min-height: 200px;
-            }
-
-            .palette-col:hover {
-                flex: 1;
-            }
-
-            .moodboard-layout {
-                height: auto;
-                min-height: auto;
-                display: flex;
-                flex-direction: column;
-                gap: 24px;
-            }
-
-            .mood-img {
-                position: relative;
-                width: 100% !important;
-                height: auto !important;
-                top: auto !important;
-                left: auto !important;
-                right: auto !important;
-                bottom: auto !important;
-            }
-
-            .mood-img img {
-                height: auto;
-                aspect-ratio: 16 / 10;
-            }
-
-            .components-grid {
-                grid-template-columns: 1fr;
-                gap: 60px;
-            }
-
-            .logo-row {
-                grid-template-columns: 1fr;
-                gap: 32px;
-            }
-
-            .logo-card:first-child .logo-card-img {
-                aspect-ratio: 4 / 3;
-                max-height: none;
-            }
-
-            .typography,
-            .moodboard,
-            .components,
-            .logos {
-                padding: 100px 24px;
-            }
-
-            .type-row {
-                flex-direction: column;
-                gap: 8px;
-            }
-
-            .type-meta {
-                flex: none;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .nav-links {
-                display: none;
-            }
-
-            .cover-brand {
-                font-size: 40px;
-            }
-
-            .cover-tagline {
-                font-size: 14px;
-                letter-spacing: 4px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>247 Golf Simulator — The Private Lounge | Brand Concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   CSS RESET & BASE
+   ============================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --navy: #0A1628;
+  --gold: #C9A84C;
+  --white: #FFFFFF;
+  --warm-gray: #9B9B9B;
+  --surface: #111D2E;
+  --success: #22C55E;
+  --error: #EF4444;
+  --gold-dim: rgba(201, 168, 76, 0.15);
+  --gold-glow: rgba(201, 168, 76, 0.3);
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Source Sans 3', 'Source Sans Pro', sans-serif;
+  background-color: var(--navy);
+  color: var(--white);
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Noise texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.03;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ============================================
+   SCROLL ANIMATIONS
+   ============================================ */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes goldLine {
+  from { width: 0; }
+  to { width: 60px; }
+}
+
+.reveal {
+  opacity: 0;
+}
+
+.reveal.visible {
+  animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.reveal-fade.visible {
+  animation: fadeIn 1s ease forwards;
+}
+
+.reveal-left.visible {
+  animation: slideInLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.reveal-scale.visible {
+  animation: scaleIn 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.delay-1 { animation-delay: 0.1s !important; }
+.delay-2 { animation-delay: 0.2s !important; }
+.delay-3 { animation-delay: 0.3s !important; }
+.delay-4 { animation-delay: 0.4s !important; }
+.delay-5 { animation-delay: 0.5s !important; }
+.delay-6 { animation-delay: 0.6s !important; }
+.delay-7 { animation-delay: 0.7s !important; }
+
+/* ============================================
+   LAYOUT
+   ============================================ */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 32px;
+  position: relative;
+  z-index: 1;
+}
+
+section {
+  padding: 120px 0;
+  position: relative;
+}
+
+.section-label {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+  display: block;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 24px;
+  line-height: 1.2;
+}
+
+.gold-rule {
+  width: 60px;
+  height: 2px;
+  background: var(--gold);
+  margin-bottom: 40px;
+  border: none;
+}
+
+.gold-rule.visible {
+  animation: goldLine 0.6s ease forwards;
+}
+
+.section-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  border: none;
+  margin: 0;
+}
+
+/* ============================================
+   1. HERO
+   ============================================ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at center, rgba(201,168,76,0.04) 0%, transparent 70%);
+  z-index: 0;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: linear-gradient(to top, var(--navy), transparent);
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-eyebrow {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: fadeIn 1s ease 0.3s forwards;
+}
+
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s forwards;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.hero-subtitle {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 300;
+  color: var(--warm-gray);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 48px;
+  opacity: 0;
+  animation: fadeIn 1s ease 0.9s forwards;
+}
+
+.hero-meta {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.8rem;
+  color: rgba(155, 155, 155, 0.5);
+  letter-spacing: 0.1em;
+  opacity: 0;
+  animation: fadeIn 1s ease 1.3s forwards;
+}
+
+.hero-scroll {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  animation: fadeIn 1s ease 1.6s forwards;
+}
+
+.hero-scroll span {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--warm-gray);
+}
+
+.hero-scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* ============================================
+   2. MOOD & POSITIONING
+   ============================================ */
+.mood-section {
+  padding: 140px 0;
+}
+
+.mood-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.mood-text p {
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 24px;
+  line-height: 1.8;
+}
+
+.mood-text p:first-of-type::first-line {
+  color: var(--white);
+  font-weight: 500;
+}
+
+.mood-pull-quote {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-style: italic;
+  color: var(--gold);
+  line-height: 1.5;
+  padding-left: 24px;
+  border-left: 2px solid var(--gold);
+  margin-top: 20px;
+}
+
+.mood-attributes {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 20px;
+}
+
+.mood-attr {
+  padding: 24px;
+  border: 1px solid rgba(201,168,76,0.1);
+  border-radius: 4px;
+  background: rgba(17,29,46,0.5);
+}
+
+.mood-attr h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.mood-attr p {
+  font-size: 0.95rem;
+  color: var(--warm-gray);
+  line-height: 1.6;
+}
+
+/* ============================================
+   3. COLOR PALETTE
+   ============================================ */
+.palette-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  margin-bottom: 60px;
+}
+
+.color-card {
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.color-swatch {
+  height: 120px;
+  display: flex;
+  align-items: flex-end;
+  padding: 12px 16px;
+}
+
+.color-swatch span {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 4px 8px;
+  border-radius: 3px;
+  background: rgba(0,0,0,0.3);
+  color: var(--white);
+}
+
+.color-info {
+  padding: 16px;
+}
+
+.color-info h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+.color-info p {
+  font-size: 0.85rem;
+  color: var(--warm-gray);
+}
+
+/* Contrast ratio table */
+.contrast-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.contrast-table th,
+.contrast-table td {
+  padding: 14px 20px;
+  text-align: left;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.contrast-table th {
+  font-family: 'Source Sans 3', sans-serif;
+  font-weight: 600;
+  color: var(--gold);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.contrast-table td {
+  color: rgba(255,255,255,0.7);
+}
+
+.contrast-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.contrast-badge.pass {
+  background: rgba(34,197,94,0.15);
+  color: var(--success);
+}
+
+.contrast-badge.fail {
+  background: rgba(239,68,68,0.15);
+  color: var(--error);
+}
+
+/* ============================================
+   4. TYPOGRAPHY SHOWCASE
+   ============================================ */
+.type-showcase {
+  padding: 140px 0;
+}
+
+.type-scale {
+  margin-bottom: 80px;
+}
+
+.type-specimen {
+  display: flex;
+  align-items: baseline;
+  gap: 32px;
+  padding: 28px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.type-meta {
+  flex-shrink: 0;
+  width: 120px;
+  text-align: right;
+}
+
+.type-meta .level {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  display: block;
+}
+
+.type-meta .size {
+  font-size: 0.8rem;
+  color: var(--warm-gray);
+}
+
+.type-sample {
+  flex: 1;
+  font-family: 'Playfair Display', serif;
+  color: var(--white);
+  line-height: 1.2;
+}
+
+.type-sample.h1 { font-size: 3.5rem; font-weight: 700; }
+.type-sample.h2 { font-size: 2.5rem; font-weight: 700; }
+.type-sample.h3 { font-size: 1.75rem; font-weight: 600; }
+.type-sample.h4 { font-size: 1.25rem; font-weight: 600; }
+.type-sample.body-text {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.7;
+}
+
+.type-weights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  margin-bottom: 60px;
+}
+
+.type-font-group h3 {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 24px;
+}
+
+.weight-sample {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.weight-sample .text {
+  display: block;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+.weight-sample .label {
+  font-size: 0.8rem;
+  color: var(--warm-gray);
+}
+
+.heading-weights .text {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.75rem;
+}
+
+.body-weights .text {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 1.25rem;
+}
+
+.type-paragraph {
+  max-width: 680px;
+}
+
+.type-paragraph h3 {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+
+.type-paragraph p {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: rgba(255,255,255,0.75);
+}
+
+/* ============================================
+   5. BUTTON STYLES
+   ============================================ */
+.buttons-section {
+  padding: 140px 0;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+  margin-bottom: 48px;
+}
+
+.button-demo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.button-demo .btn-label {
+  font-size: 0.75rem;
+  color: var(--warm-gray);
+  letter-spacing: 0.05em;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 36px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: var(--gold);
+  color: var(--navy);
+  border-color: var(--gold);
+}
+
+.btn-primary:hover {
+  background: #D4B65E;
+  border-color: #D4B65E;
+  box-shadow: 0 8px 30px rgba(201,168,76,0.3);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: var(--navy);
+  color: var(--white);
+  border-color: var(--gold);
+}
+
+.btn-secondary:hover {
+  background: var(--gold);
+  color: var(--navy);
+  box-shadow: 0 8px 30px rgba(201,168,76,0.2);
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--gold);
+  border-color: transparent;
+}
+
+.btn-ghost:hover {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.08);
+  transform: translateY(-2px);
+}
+
+.btn-states-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.btn-state-card {
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 8px;
+  padding: 32px;
+  text-align: center;
+}
+
+.btn-state-card h4 {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--warm-gray);
+  margin-bottom: 20px;
+}
+
+.btn-state-card .btn {
+  pointer-events: none;
+}
+
+.btn-state-card.hover-state .btn-primary {
+  background: #D4B65E;
+  border-color: #D4B65E;
+  box-shadow: 0 8px 30px rgba(201,168,76,0.3);
+}
+
+.btn-state-card.hover-state .btn-secondary {
+  background: var(--gold);
+  color: var(--navy);
+  box-shadow: 0 8px 30px rgba(201,168,76,0.2);
+}
+
+.btn-state-card.hover-state .btn-ghost {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.08);
+}
+
+/* ============================================
+   6. COMPONENT EXAMPLES
+   ============================================ */
+.components-section {
+  padding: 140px 0;
+}
+
+.component-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 60px;
+}
+
+/* Sample Card */
+.sample-card {
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sample-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.sample-card-img {
+  height: 200px;
+  background: url('https://images.pexels.com/photos/164250/pexels-photo-164250.jpeg?auto=compress&cs=tinysrgb&w=800') center/cover;
+  position: relative;
+}
+
+.sample-card-img::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(to top, var(--surface), transparent);
+}
+
+.sample-card-body {
+  padding: 28px;
+}
+
+.sample-card-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.sample-card-body h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+
+.sample-card-body p {
+  font-size: 0.95rem;
+  color: var(--warm-gray);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.sample-card-body .btn {
+  padding: 10px 24px;
+  font-size: 0.75rem;
+}
+
+/* Pricing Card */
+.pricing-card {
+  background: var(--surface);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 8px;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.pricing-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+
+.pricing-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--navy);
+  background: var(--gold);
+  padding: 4px 12px;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+.pricing-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.pricing-amount {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.pricing-amount span {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--warm-gray);
+}
+
+.pricing-desc {
+  font-size: 0.9rem;
+  color: var(--warm-gray);
+  margin-bottom: 28px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.pricing-features {
+  list-style: none;
+  margin-bottom: 32px;
+}
+
+.pricing-features li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.8);
+}
+
+.pricing-features li::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  flex-shrink: 0;
+}
+
+.pricing-card .btn {
+  width: 100%;
+}
+
+/* Testimonial Card */
+.testimonial-card {
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 40px;
+  position: relative;
+}
+
+.testimonial-card::before {
+  content: '\201C';
+  font-family: 'Playfair Display', serif;
+  font-size: 6rem;
+  color: var(--gold);
+  opacity: 0.2;
+  position: absolute;
+  top: 10px;
+  left: 24px;
+  line-height: 1;
+}
+
+.testimonial-text {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.7;
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.testimonial-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--gold-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.testimonial-name {
+  font-weight: 600;
+  color: var(--white);
+  font-size: 0.95rem;
+}
+
+.testimonial-role {
+  font-size: 0.85rem;
+  color: var(--warm-gray);
+}
+
+/* Navigation Mockup */
+.nav-mockup-wrapper {
+  grid-column: 1 / -1;
+  margin-top: 20px;
+}
+
+.nav-mockup-wrapper > h3 {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+
+.nav-mockup {
+  background: rgba(10,22,40,0.95);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  backdrop-filter: blur(10px);
+}
+
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.nav-logo span {
+  color: var(--gold);
+}
+
+.nav-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+
+.nav-links li a {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--warm-gray);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.nav-links li a:hover {
+  color: var(--gold);
+}
+
+.nav-cta .btn {
+  padding: 10px 24px;
+  font-size: 0.75rem;
+}
+
+/* ============================================
+   7. PHOTOGRAPHY DIRECTION
+   ============================================ */
+.photo-section {
+  padding: 140px 0;
+}
+
+.photo-direction-text {
+  max-width: 600px;
+  margin-bottom: 60px;
+}
+
+.photo-direction-text p {
+  font-size: 1.05rem;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+
+.photo-keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.photo-keyword {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  padding: 6px 16px;
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 3px;
+}
+
+.photo-gallery {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: 280px 280px;
+  gap: 16px;
+}
+
+.photo-item {
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+
+.photo-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.6s ease;
+  filter: brightness(0.8) contrast(1.1) saturate(0.85);
+}
+
+.photo-item:hover img {
+  transform: scale(1.05);
+  filter: brightness(0.9) contrast(1.1) saturate(0.9);
+}
+
+.photo-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to top, rgba(10,22,40,0.9), transparent);
+  pointer-events: none;
+}
+
+.photo-caption {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  z-index: 2;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.4;
+}
+
+.photo-caption strong {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+
+/* Gallery layout */
+.photo-item:nth-child(1) { grid-column: 1 / 4; grid-row: 1; }
+.photo-item:nth-child(2) { grid-column: 4 / 7; grid-row: 1; }
+.photo-item:nth-child(3) { grid-column: 1 / 3; grid-row: 2; }
+.photo-item:nth-child(4) { grid-column: 3 / 5; grid-row: 2; }
+.photo-item:nth-child(5) { grid-column: 5 / 7; grid-row: 2; }
+
+/* ============================================
+   8. LOGO PLACEHOLDER
+   ============================================ */
+.logo-section {
+  padding: 140px 0;
+}
+
+.logo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.logo-card {
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 48px 32px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+}
+
+.logo-card img {
+  max-width: 180px;
+  max-height: 120px;
+  object-fit: contain;
+  margin-bottom: 16px;
+}
+
+.logo-placeholder {
+  display: none;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  color: var(--gold);
+  opacity: 0.5;
+  margin-bottom: 16px;
+  padding: 30px;
+  border: 1px dashed rgba(201,168,76,0.3);
+  border-radius: 4px;
+}
+
+.logo-card img.failed + .logo-placeholder {
+  display: block;
+}
+
+.logo-card img.failed {
+  display: none;
+}
+
+.logo-card-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--warm-gray);
+  margin-top: auto;
+}
+
+/* ============================================
+   9. MINI WEBSITE MOCKUP
+   ============================================ */
+.mockup-section {
+  padding: 140px 0;
+}
+
+.browser-frame {
+  background: #080E1A;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+}
+
+.browser-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.browser-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+}
+
+.browser-dot:nth-child(1) { background: #EF4444; }
+.browser-dot:nth-child(2) { background: #F59E0B; }
+.browser-dot:nth-child(3) { background: #22C55E; }
+
+.browser-url {
+  flex: 1;
+  margin-left: 12px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  color: var(--warm-gray);
+  font-family: 'Source Sans 3', sans-serif;
+}
+
+.mock-site {
+  padding: 0;
+}
+
+/* Mock navigation */
+.mock-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 40px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.mock-nav-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.mock-nav-brand span {
+  color: var(--gold);
+}
+
+.mock-nav-links {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+}
+
+.mock-nav-links li {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--warm-gray);
+}
+
+.mock-nav-cta {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--navy);
+  background: var(--gold);
+  padding: 8px 18px;
+  border-radius: 3px;
+}
+
+/* Mock Hero */
+.mock-hero {
+  padding: 80px 40px 60px;
+  text-align: center;
+  background: radial-gradient(ellipse at center top, rgba(201,168,76,0.05) 0%, transparent 60%);
+  position: relative;
+}
+
+.mock-hero-eyebrow {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+
+.mock-hero h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+
+.mock-hero h2 em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.mock-hero p {
+  font-size: 0.9rem;
+  color: var(--warm-gray);
+  max-width: 500px;
+  margin: 0 auto 28px;
+  line-height: 1.6;
+}
+
+.mock-hero-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.mock-hero-buttons .btn {
+  padding: 10px 24px;
+  font-size: 0.7rem;
+}
+
+/* Mock Feature Row */
+.mock-features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  padding: 40px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+.mock-feature {
+  text-align: center;
+  padding: 24px 16px;
+}
+
+.mock-feature-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--gold-dim);
+  margin: 0 auto 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: var(--gold);
+}
+
+.mock-feature h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+
+.mock-feature p {
+  font-size: 0.8rem;
+  color: var(--warm-gray);
+  line-height: 1.5;
+}
+
+/* ============================================
+   10. BRAND VOICE
+   ============================================ */
+.voice-section {
+  padding: 140px 0;
+}
+
+.voice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 60px;
+}
+
+.voice-card {
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 36px;
+}
+
+.voice-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.voice-do {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 3px;
+}
+
+.voice-do.yes {
+  background: rgba(34,197,94,0.15);
+  color: var(--success);
+}
+
+.voice-do.no {
+  background: rgba(239,68,68,0.15);
+  color: var(--error);
+}
+
+.voice-card h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  color: var(--white);
+}
+
+.voice-examples {
+  list-style: none;
+}
+
+.voice-examples li {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.5;
+}
+
+.voice-examples li:last-child {
+  border-bottom: none;
+}
+
+.voice-principles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.voice-principle {
+  padding: 32px;
+  border: 1px solid rgba(201,168,76,0.12);
+  border-radius: 8px;
+  background: rgba(201,168,76,0.03);
+}
+
+.voice-principle h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+
+.voice-principle p {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.6;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.presentation-footer {
+  padding: 80px 0;
+  text-align: center;
+}
+
+.footer-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.footer-brand span {
+  color: var(--gold);
+}
+
+.footer-tagline {
+  font-size: 0.85rem;
+  color: var(--warm-gray);
+  margin-bottom: 32px;
+}
+
+.footer-meta {
+  font-size: 0.75rem;
+  color: rgba(155,155,155,0.5);
+  letter-spacing: 0.1em;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 900px) {
+  section {
+    padding: 80px 0;
+  }
+
+  .mood-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .type-weights {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .component-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .logo-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .photo-gallery {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+  }
+
+  .photo-item:nth-child(1),
+  .photo-item:nth-child(2),
+  .photo-item:nth-child(3),
+  .photo-item:nth-child(4),
+  .photo-item:nth-child(5) {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .photo-item:nth-child(5) {
+    grid-column: 1 / -1;
+  }
+
+  .photo-item {
+    height: 220px;
+  }
+
+  .photo-item img {
+    height: 100%;
+  }
+
+  .voice-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .voice-principles {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-states-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mock-features {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .mock-nav-links {
+    display: none;
+  }
+
+  .type-specimen {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .type-meta {
+    width: auto;
+    text-align: left;
+  }
+
+  .type-sample.h1 { font-size: 2.5rem; }
+  .type-sample.h2 { font-size: 1.75rem; }
+
+  .nav-links {
+    display: none;
+  }
+
+  .palette-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 0 20px;
+  }
+
+  .hero-title {
+    font-size: 2.75rem;
+  }
+
+  .button-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .button-demo {
+    width: 100%;
+  }
+
+  .button-demo .btn {
+    width: 100%;
+  }
+
+  .photo-gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .photo-item:nth-child(5) {
+    grid-column: auto;
+  }
+
+  .mock-hero-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+</style>
 </head>
 <body>
 
-    <!-- Top Navigation -->
-    <nav class="top-nav" id="topNav">
-        <div class="nav-brand">247Golf</div>
-        <ul class="nav-links">
-            <li><a href="#cover">Cover</a></li>
-            <li><a href="#palette">Palette</a></li>
-            <li><a href="#typography">Type</a></li>
-            <li><a href="#moodboard">Mood</a></li>
-            <li><a href="#components">Components</a></li>
-            <li><a href="#logos">Logos</a></li>
+<!-- ============================================
+     1. HERO
+     ============================================ -->
+<section class="hero">
+  <div class="hero-content">
+    <p class="hero-eyebrow">247 Golf Simulator &mdash; Brand Concept 1</p>
+    <h1 class="hero-title">The Private<br><em>Lounge</em></h1>
+    <p class="hero-subtitle">A premium branded experience</p>
+    <p class="hero-meta">Prepared by Oni Technologies &bull; March 2026</p>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================
+     2. MOOD & POSITIONING
+     ============================================ -->
+<section class="mood-section">
+  <div class="container">
+    <div class="mood-grid">
+      <div class="mood-text">
+        <span class="section-label reveal">Mood &amp; Positioning</span>
+        <h2 class="section-title reveal delay-1">Where Golfers<br>Go to Escape</h2>
+        <hr class="gold-rule reveal delay-2">
+        <p class="reveal delay-3">247 Golf Simulator is where golfers go when they want more than a tee time. It is a private retreat from the noise of life, a place where the lighting is low, the drinks are good, and the swing feels right. This is not a family fun center. This is not a sports bar with screens. This is yours.</p>
+        <p class="reveal delay-4">The brand carries itself with the quiet confidence of a place that does not need to advertise. Members know. The regulars have their preferred bay. The staff remembers your drink. Every detail, from the matte black scorecard to the grain of the putting surface, has been considered.</p>
+        <p class="reveal delay-5">This brand identity positions 247 Golf Simulator as the only premium indoor golf experience in its market. Not the cheapest. Not the flashiest. The one that gets it right.</p>
+        <div class="mood-pull-quote reveal delay-6">
+          &ldquo;Walk in a golfer. Leave a member.&rdquo;
+        </div>
+      </div>
+      <div class="mood-attributes">
+        <div class="mood-attr reveal delay-2">
+          <h4>Exclusive, Not Exclusionary</h4>
+          <p>The brand feels premium and earned, but the door is open to anyone who values the experience. No velvet rope attitude, just elevated standards.</p>
+        </div>
+        <div class="mood-attr reveal delay-3">
+          <h4>Quiet Confidence</h4>
+          <p>No shouting. No gimmicks. The brand speaks in a low, steady voice. Quality is self-evident. Let the experience sell itself.</p>
+        </div>
+        <div class="mood-attr reveal delay-4">
+          <h4>Modern Heritage</h4>
+          <p>Respects golf tradition without being trapped by it. Classic materials (leather, wood, brass) meet clean contemporary lines and technology.</p>
+        </div>
+        <div class="mood-attr reveal delay-5">
+          <h4>Social &amp; Spirited</h4>
+          <p>This is not a sterile simulator lab. There is warmth here, laughter, competition between friends, and a well-stocked bar. The vibe is refined fun.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================
+     3. COLOR PALETTE
+     ============================================ -->
+<section class="palette-section" style="padding: 140px 0;">
+  <div class="container">
+    <span class="section-label reveal">Color Palette</span>
+    <h2 class="section-title reveal delay-1">A Restrained Palette,<br>Deliberately Chosen</h2>
+    <hr class="gold-rule reveal delay-2">
+
+    <div class="palette-grid">
+      <div class="color-card reveal delay-1">
+        <div class="color-swatch" style="background: #0A1628;">
+          <span>#0A1628</span>
+        </div>
+        <div class="color-info">
+          <h4>Deep Navy</h4>
+          <p>Primary Background</p>
+        </div>
+      </div>
+      <div class="color-card reveal delay-2">
+        <div class="color-swatch" style="background: #C9A84C;">
+          <span style="color: #0A1628;">#C9A84C</span>
+        </div>
+        <div class="color-info">
+          <h4>Champagne Gold</h4>
+          <p>Primary Accent</p>
+        </div>
+      </div>
+      <div class="color-card reveal delay-3">
+        <div class="color-swatch" style="background: #FFFFFF;">
+          <span style="color: #0A1628;">#FFFFFF</span>
+        </div>
+        <div class="color-info">
+          <h4>White</h4>
+          <p>Headings &amp; Emphasis</p>
+        </div>
+      </div>
+      <div class="color-card reveal delay-4">
+        <div class="color-swatch" style="background: #9B9B9B;">
+          <span>#9B9B9B</span>
+        </div>
+        <div class="color-info">
+          <h4>Warm Gray</h4>
+          <p>Body Text &amp; Secondary</p>
+        </div>
+      </div>
+      <div class="color-card reveal delay-5">
+        <div class="color-swatch" style="background: #111D2E;">
+          <span>#111D2E</span>
+        </div>
+        <div class="color-info">
+          <h4>Surface</h4>
+          <p>Cards &amp; Elevated Elements</p>
+        </div>
+      </div>
+      <div class="color-card reveal delay-6">
+        <div class="color-swatch" style="background: #22C55E;">
+          <span>#22C55E</span>
+        </div>
+        <div class="color-info">
+          <h4>Success</h4>
+          <p>Confirmations &amp; Positive States</p>
+        </div>
+      </div>
+      <div class="color-card reveal delay-7">
+        <div class="color-swatch" style="background: #EF4444;">
+          <span>#EF4444</span>
+        </div>
+        <div class="color-info">
+          <h4>Error</h4>
+          <p>Alerts &amp; Destructive Actions</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 60px;">
+      <h3 class="reveal" style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px;">Contrast Ratios (WCAG 2.1)</h3>
+      <table class="contrast-table reveal delay-1">
+        <thead>
+          <tr>
+            <th>Foreground</th>
+            <th>Background</th>
+            <th>Ratio</th>
+            <th>AA Normal</th>
+            <th>AA Large</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>White #FFFFFF</td>
+            <td>Navy #0A1628</td>
+            <td>16.75:1</td>
+            <td><span class="contrast-badge pass">PASS</span></td>
+            <td><span class="contrast-badge pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td>Gold #C9A84C</td>
+            <td>Navy #0A1628</td>
+            <td>7.12:1</td>
+            <td><span class="contrast-badge pass">PASS</span></td>
+            <td><span class="contrast-badge pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td>Warm Gray #9B9B9B</td>
+            <td>Navy #0A1628</td>
+            <td>6.58:1</td>
+            <td><span class="contrast-badge pass">PASS</span></td>
+            <td><span class="contrast-badge pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td>Navy #0A1628</td>
+            <td>Gold #C9A84C</td>
+            <td>7.12:1</td>
+            <td><span class="contrast-badge pass">PASS</span></td>
+            <td><span class="contrast-badge pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td>Gold #C9A84C</td>
+            <td>Surface #111D2E</td>
+            <td>6.04:1</td>
+            <td><span class="contrast-badge pass">PASS</span></td>
+            <td><span class="contrast-badge pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td>Warm Gray #9B9B9B</td>
+            <td>Surface #111D2E</td>
+            <td>5.58:1</td>
+            <td><span class="contrast-badge pass">PASS</span></td>
+            <td><span class="contrast-badge pass">PASS</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================
+     4. TYPOGRAPHY SHOWCASE
+     ============================================ -->
+<section class="type-showcase">
+  <div class="container">
+    <span class="section-label reveal">Typography</span>
+    <h2 class="section-title reveal delay-1">Serif Authority,<br>Sans-Serif Clarity</h2>
+    <hr class="gold-rule reveal delay-2">
+
+    <!-- Type Scale -->
+    <div class="type-scale">
+      <div class="type-specimen reveal delay-1">
+        <div class="type-meta">
+          <span class="level">H1</span>
+          <span class="size">56px / 700</span>
+        </div>
+        <div class="type-sample h1">Your Private Round</div>
+      </div>
+      <div class="type-specimen reveal delay-2">
+        <div class="type-meta">
+          <span class="level">H2</span>
+          <span class="size">40px / 700</span>
+        </div>
+        <div class="type-sample h2">Reserve Your Bay</div>
+      </div>
+      <div class="type-specimen reveal delay-3">
+        <div class="type-meta">
+          <span class="level">H3</span>
+          <span class="size">28px / 600</span>
+        </div>
+        <div class="type-sample h3">Premium Indoor Golf</div>
+      </div>
+      <div class="type-specimen reveal delay-4">
+        <div class="type-meta">
+          <span class="level">H4</span>
+          <span class="size">20px / 600</span>
+        </div>
+        <div class="type-sample h4">Session Packages &amp; Memberships</div>
+      </div>
+      <div class="type-specimen reveal delay-5">
+        <div class="type-meta">
+          <span class="level">Body</span>
+          <span class="size">16px / 400</span>
+        </div>
+        <div class="type-sample body-text">Experience world-class courses from the comfort of a private bay. High-definition simulation, real-time ball tracking, and an atmosphere designed for the player who expects more.</div>
+      </div>
+    </div>
+
+    <!-- Font Weights -->
+    <div class="type-weights">
+      <div class="type-font-group heading-weights reveal">
+        <h3>Playfair Display</h3>
+        <div class="weight-sample">
+          <span class="text" style="font-weight: 400;">The Private Lounge</span>
+          <span class="label">Regular 400</span>
+        </div>
+        <div class="weight-sample">
+          <span class="text" style="font-weight: 500;">The Private Lounge</span>
+          <span class="label">Medium 500</span>
+        </div>
+        <div class="weight-sample">
+          <span class="text" style="font-weight: 600;">The Private Lounge</span>
+          <span class="label">SemiBold 600</span>
+        </div>
+        <div class="weight-sample">
+          <span class="text" style="font-weight: 700;">The Private Lounge</span>
+          <span class="label">Bold 700</span>
+        </div>
+        <div class="weight-sample">
+          <span class="text" style="font-weight: 800;">The Private Lounge</span>
+          <span class="label">ExtraBold 800</span>
+        </div>
+        <div class="weight-sample">
+          <span class="text" style="font-weight: 700; font-style: italic;">The Private Lounge</span>
+          <span class="label">Bold 700 Italic</span>
+        </div>
+      </div>
+
+      <div class="type-font-group body-weights reveal delay-2">
+        <h3>Source Sans 3</h3>
+        <div class="weight-sample">
+          <span class="text" style="font-weight: 300;">Reserve your exclusive session today</span>
+          <span class="label">Light 300</span>
+        </div>
+        <div class="weight-sample">
+          <span class="text" style="font-weight: 400;">Reserve your exclusive session today</span>
+          <span class="label">Regular 400</span>
+        </div>
+        <div class="weight-sample">
+          <span class="text" style="font-weight: 500;">Reserve your exclusive session today</span>
+          <span class="label">Medium 500</span>
+        </div>
+        <div class="weight-sample">
+          <span class="text" style="font-weight: 600;">Reserve your exclusive session today</span>
+          <span class="label">SemiBold 600</span>
+        </div>
+        <div class="weight-sample">
+          <span class="text" style="font-weight: 700;">Reserve your exclusive session today</span>
+          <span class="label">Bold 700</span>
+        </div>
+        <div class="weight-sample">
+          <span class="text" style="font-weight: 400; font-style: italic;">Reserve your exclusive session today</span>
+          <span class="label">Regular 400 Italic</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sample Paragraph -->
+    <div class="type-paragraph reveal">
+      <h3>Sample Brand Copy</h3>
+      <p>Every bay at 247 Golf Simulator has been engineered for precision and built for comfort. Our HD launch monitors capture every metric that matters, while our curated course library puts the world's finest fairways at your feet. Whether you are warming up for Saturday morning or settling in for an evening with friends, this is your space. No rush. No waiting. Just you, the club, and the quiet satisfaction of a shot well struck.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================
+     5. BUTTON STYLES
+     ============================================ -->
+<section class="buttons-section">
+  <div class="container">
+    <span class="section-label reveal">Interactive Elements</span>
+    <h2 class="section-title reveal delay-1">Buttons &amp; Actions</h2>
+    <hr class="gold-rule reveal delay-2">
+
+    <!-- Live Interactive Buttons -->
+    <p class="reveal delay-2" style="color: var(--warm-gray); margin-bottom: 40px; font-size: 0.95rem;">Hover over each button to see state transitions.</p>
+
+    <div class="button-row reveal delay-3">
+      <div class="button-demo">
+        <button class="btn btn-primary">Reserve a Session</button>
+        <span class="btn-label">Primary &mdash; Gold / Navy</span>
+      </div>
+      <div class="button-demo">
+        <button class="btn btn-secondary">View Memberships</button>
+        <span class="btn-label">Secondary &mdash; Navy / Gold Border</span>
+      </div>
+      <div class="button-demo">
+        <button class="btn btn-ghost">Learn More</button>
+        <span class="btn-label">Ghost &mdash; Transparent / Gold Text</span>
+      </div>
+    </div>
+
+    <!-- Static State Comparison -->
+    <h3 class="reveal" style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; margin-top: 60px;">State Comparison</h3>
+
+    <div class="btn-states-grid reveal delay-1">
+      <div class="btn-state-card">
+        <h4>Default</h4>
+        <button class="btn btn-primary" style="margin-bottom: 12px;">Primary</button><br>
+        <button class="btn btn-secondary" style="margin-bottom: 12px;">Secondary</button><br>
+        <button class="btn btn-ghost">Ghost</button>
+      </div>
+      <div class="btn-state-card hover-state">
+        <h4>Hover</h4>
+        <button class="btn btn-primary" style="margin-bottom: 12px;">Primary</button><br>
+        <button class="btn btn-secondary" style="margin-bottom: 12px;">Secondary</button><br>
+        <button class="btn btn-ghost">Ghost</button>
+      </div>
+      <div class="btn-state-card">
+        <h4>Disabled</h4>
+        <button class="btn btn-primary" style="margin-bottom: 12px; opacity: 0.4;">Primary</button><br>
+        <button class="btn btn-secondary" style="margin-bottom: 12px; opacity: 0.4;">Secondary</button><br>
+        <button class="btn btn-ghost" style="opacity: 0.4;">Ghost</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================
+     6. COMPONENT EXAMPLES
+     ============================================ -->
+<section class="components-section">
+  <div class="container">
+    <span class="section-label reveal">Components</span>
+    <h2 class="section-title reveal delay-1">UI Building Blocks</h2>
+    <hr class="gold-rule reveal delay-2">
+
+    <div class="component-grid">
+      <!-- Sample Card -->
+      <div class="reveal delay-2">
+        <h3 style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px;">Content Card</h3>
+        <div class="sample-card">
+          <div class="sample-card-img"></div>
+          <div class="sample-card-body">
+            <span class="sample-card-tag">Featured Course</span>
+            <h3>Pebble Beach Pro</h3>
+            <p>Play the iconic coastal links in stunning HD simulation. Every bunker, every break, every ocean view rendered in detail.</p>
+            <button class="btn btn-ghost">Explore Course</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pricing Card -->
+      <div class="reveal delay-3">
+        <h3 style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px;">Pricing Card</h3>
+        <div class="pricing-card">
+          <span class="pricing-badge">Most Popular</span>
+          <h3>The Membership</h3>
+          <div class="pricing-amount">$199<span> /month</span></div>
+          <p class="pricing-desc">Unlimited access to all bays and courses during member hours.</p>
+          <ul class="pricing-features">
+            <li>Priority bay reservations</li>
+            <li>Unlimited sessions, any day</li>
+            <li>Guest passes (2 per month)</li>
+            <li>Swing analytics dashboard</li>
+            <li>Members lounge access</li>
+          </ul>
+          <button class="btn btn-primary">Become a Member</button>
+        </div>
+      </div>
+
+      <!-- Testimonial Card -->
+      <div class="reveal delay-4">
+        <h3 style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px;">Testimonial Card</h3>
+        <div class="testimonial-card">
+          <p class="testimonial-text">I have been to every simulator spot in the city. This is the first one that feels like it was built for golfers, not gamers. The bays are private, the tech is spot-on, and the bourbon selection does not hurt either.</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">JM</div>
+            <div>
+              <div class="testimonial-name">James Mitchell</div>
+              <div class="testimonial-role">Member since 2025</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Review Card -->
+      <div class="reveal delay-5">
+        <h3 style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px;">Review Card</h3>
+        <div class="testimonial-card">
+          <p class="testimonial-text">Booked a session for a client meeting and it was perfect. Impressive without being over the top. My client talked about it for weeks. We closed the deal on the back nine at St Andrews.</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">SR</div>
+            <div>
+              <div class="testimonial-name">Sarah Reeves</div>
+              <div class="testimonial-role">Corporate Event &mdash; Nov 2025</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Mockup -->
+      <div class="nav-mockup-wrapper reveal delay-3">
+        <h3>Navigation Bar</h3>
+        <div class="nav-mockup">
+          <div class="nav-logo">247 <span>Golf</span></div>
+          <ul class="nav-links">
+            <li><a href="#">Experience</a></li>
+            <li><a href="#">Memberships</a></li>
+            <li><a href="#">Courses</a></li>
+            <li><a href="#">Events</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+          <div class="nav-cta">
+            <button class="btn btn-primary">Book a Bay</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================
+     7. PHOTOGRAPHY DIRECTION
+     ============================================ -->
+<section class="photo-section">
+  <div class="container">
+    <span class="section-label reveal">Photography Direction</span>
+    <h2 class="section-title reveal delay-1">Dark. Cinematic.<br>Deliberately Lit.</h2>
+    <hr class="gold-rule reveal delay-2">
+
+    <div class="photo-direction-text reveal delay-3">
+      <p>All photography follows a strict visual language: single-source lighting, crushed blacks, and muted warm tones. The camera finds quiet moments, not action shots. A hand resting on a club. Light catching the edge of a glass. The grain of leather under tungsten.</p>
+      <p>Depth of field is shallow. Backgrounds dissolve. The subject is always clear, always isolated, always deliberate.</p>
+      <div class="photo-keywords">
+        <span class="photo-keyword">Moody</span>
+        <span class="photo-keyword">Cinematic</span>
+        <span class="photo-keyword">Single-source Light</span>
+        <span class="photo-keyword">Crushed Blacks</span>
+        <span class="photo-keyword">Shallow DOF</span>
+        <span class="photo-keyword">Warm Tungsten</span>
+        <span class="photo-keyword">Film Grain</span>
+      </div>
+    </div>
+
+    <div class="photo-gallery">
+      <div class="photo-item reveal reveal-scale delay-1">
+        <img src="https://images.pexels.com/photos/114972/pexels-photo-114972.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Golf swing in dramatic lighting" loading="lazy">
+        <div class="photo-caption">
+          <strong>The Swing</strong>
+          Strong side-lighting isolates form. Background falls to black.
+        </div>
+      </div>
+      <div class="photo-item reveal reveal-scale delay-2">
+        <img src="https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Premium lounge interior" loading="lazy">
+        <div class="photo-caption">
+          <strong>The Lounge</strong>
+          Warm pools of light in darkness. Texture and material visible, not overlit.
+        </div>
+      </div>
+      <div class="photo-item reveal reveal-scale delay-3">
+        <img src="https://images.pexels.com/photos/6572968/pexels-photo-6572968.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Golf ball close-up detail" loading="lazy">
+        <div class="photo-caption">
+          <strong>The Detail</strong>
+          Macro shots with extreme shallow focus. Texture becomes abstract.
+        </div>
+      </div>
+      <div class="photo-item reveal reveal-scale delay-4">
+        <img src="https://images.pexels.com/photos/164250/pexels-photo-164250.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Golf course landscape" loading="lazy">
+        <div class="photo-caption">
+          <strong>The Course</strong>
+          Golden hour or twilight. Never midday. Atmosphere over clarity.
+        </div>
+      </div>
+      <div class="photo-item reveal reveal-scale delay-5">
+        <img src="https://images.pexels.com/photos/3171815/pexels-photo-3171815.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Friends gathering" loading="lazy">
+        <div class="photo-caption">
+          <strong>The Gathering</strong>
+          Candid warmth. Friends in low light. Never posed, always natural.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================
+     8. LOGO PLACEHOLDER
+     ============================================ -->
+<section class="logo-section">
+  <div class="container">
+    <span class="section-label reveal">Logo System</span>
+    <h2 class="section-title reveal delay-1">Brand Mark Variants</h2>
+    <hr class="gold-rule reveal delay-2">
+
+    <div class="logo-grid">
+      <div class="logo-card reveal delay-2">
+        <img src="images/concept-1-icon.png" alt="247 Golf Icon" onerror="this.classList.add('failed')">
+        <div class="logo-placeholder">Logo Concept</div>
+        <span class="logo-card-label">Icon Mark</span>
+      </div>
+      <div class="logo-card reveal delay-3">
+        <img src="images/concept-1-wordmark.png" alt="247 Golf Wordmark" onerror="this.classList.add('failed')">
+        <div class="logo-placeholder">Logo Concept</div>
+        <span class="logo-card-label">Wordmark</span>
+      </div>
+      <div class="logo-card reveal delay-4">
+        <img src="images/concept-1-combined.png" alt="247 Golf Combined Mark" onerror="this.classList.add('failed')">
+        <div class="logo-placeholder">Logo Concept</div>
+        <span class="logo-card-label">Combined Mark</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================
+     9. MINI WEBSITE MOCKUP
+     ============================================ -->
+<section class="mockup-section">
+  <div class="container">
+    <span class="section-label reveal">Website Preview</span>
+    <h2 class="section-title reveal delay-1">How It Comes Together</h2>
+    <hr class="gold-rule reveal delay-2">
+
+    <div class="browser-frame reveal reveal-scale delay-3">
+      <div class="browser-bar">
+        <div class="browser-dot"></div>
+        <div class="browser-dot"></div>
+        <div class="browser-dot"></div>
+        <div class="browser-url">247golfsimulator.com</div>
+      </div>
+      <div class="mock-site">
+        <!-- Mock Nav -->
+        <div class="mock-nav">
+          <div class="mock-nav-brand">247 <span>Golf</span></div>
+          <ul class="mock-nav-links">
+            <li>Experience</li>
+            <li>Memberships</li>
+            <li>Courses</li>
+            <li>Events</li>
+            <li>Contact</li>
+          </ul>
+          <div class="mock-nav-cta">Book a Bay</div>
+        </div>
+
+        <!-- Mock Hero -->
+        <div class="mock-hero">
+          <p class="mock-hero-eyebrow">Premium Indoor Golf Experience</p>
+          <h2>Your Game.<br>Your <em>Private</em> Round.</h2>
+          <p>Step into the bay. Leave everything else behind. World-class simulation, curated courses, and an atmosphere built for golfers who expect more.</p>
+          <div class="mock-hero-buttons">
+            <button class="btn btn-primary">Reserve a Session</button>
+            <button class="btn btn-secondary">Explore Memberships</button>
+          </div>
+        </div>
+
+        <!-- Mock Features -->
+        <div class="mock-features">
+          <div class="mock-feature">
+            <div class="mock-feature-icon">&#9971;</div>
+            <h4>HD Simulation</h4>
+            <p>200+ courses rendered in high definition with real-time ball tracking and analytics.</p>
+          </div>
+          <div class="mock-feature">
+            <div class="mock-feature-icon">&#9878;</div>
+            <h4>Private Bays</h4>
+            <p>Your own space, your own pace. No shared screens. No distractions.</p>
+          </div>
+          <div class="mock-feature">
+            <div class="mock-feature-icon">&#127864;</div>
+            <h4>Full Bar &amp; Lounge</h4>
+            <p>Craft cocktails, local brews, and a curated bourbon selection between rounds.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================
+     10. BRAND VOICE
+     ============================================ -->
+<section class="voice-section">
+  <div class="container">
+    <span class="section-label reveal">Brand Voice</span>
+    <h2 class="section-title reveal delay-1">How This Brand<br>Speaks</h2>
+    <hr class="gold-rule reveal delay-2">
+
+    <div class="voice-grid">
+      <div class="voice-card reveal delay-2">
+        <div class="voice-card-header">
+          <span class="voice-do yes">We Say</span>
+          <h4>The Private Lounge Voice</h4>
+        </div>
+        <ul class="voice-examples">
+          <li>&ldquo;Reserve your session&rdquo;</li>
+          <li>&ldquo;Your private round awaits&rdquo;</li>
+          <li>&ldquo;Step into the bay&rdquo;</li>
+          <li>&ldquo;Crafted for the serious golfer&rdquo;</li>
+          <li>&ldquo;Members enjoy priority access&rdquo;</li>
+          <li>&ldquo;An evening well played&rdquo;</li>
         </ul>
-    </nav>
+      </div>
 
-    <!-- SECTION 1: COVER -->
-    <section class="section cover" id="cover">
-        <span class="cover-direction">Brand Direction: The Private Lounge</span>
-        <h1 class="cover-brand">247GolfSimulator</h1>
-        <p class="cover-tagline">Golf on your time</p>
-        <div class="cover-line"></div>
-    </section>
-
-    <!-- SECTION 2: COLOR PALETTE -->
-    <section class="section palette" id="palette">
-        <div class="section-label">Color Palette</div>
-        <div class="section-title">The Tonal Foundation</div>
-        <div class="palette-columns">
-            <div class="palette-col palette-col--black">
-                <div class="color-name">Deep Black</div>
-                <div class="color-hex">#0A0A0A</div>
-            </div>
-            <div class="palette-col palette-col--charcoal">
-                <div class="color-name">Charcoal</div>
-                <div class="color-hex">#1C1C1C</div>
-            </div>
-            <div class="palette-col palette-col--champagne">
-                <div class="color-name">Champagne</div>
-                <div class="color-hex">#D4C5A0</div>
-            </div>
-            <div class="palette-col palette-col--ivory">
-                <div class="color-name">Ivory</div>
-                <div class="color-hex">#FAF6ED</div>
-            </div>
+      <div class="voice-card reveal delay-3">
+        <div class="voice-card-header">
+          <span class="voice-do no">We Never Say</span>
+          <h4>What We Avoid</h4>
         </div>
-    </section>
+        <ul class="voice-examples">
+          <li>&ldquo;Book your tee time NOW!!!&rdquo;</li>
+          <li>&ldquo;The ULTIMATE golf experience&rdquo;</li>
+          <li>&ldquo;Fun for the whole family!&rdquo;</li>
+          <li>&ldquo;Unbeatable deals and discounts&rdquo;</li>
+          <li>&ldquo;Don't miss out!&rdquo;</li>
+          <li>&ldquo;The most amazing simulator ever&rdquo;</li>
+        </ul>
+      </div>
+    </div>
 
-    <!-- SECTION 3: TYPOGRAPHY -->
-    <section class="section typography" id="typography">
-        <div class="section-label">Typography</div>
-        <div class="section-title">Type Specimen</div>
-        <div class="type-specimen">
-            <div class="type-group">
-                <div class="type-family-label">Playfair Display &mdash; Display &amp; Headings</div>
-                <div class="type-row">
-                    <div class="type-meta">Hero / 80px<br>Bold</div>
-                    <div class="type-sample type-sample--hero">Private Luxury</div>
-                </div>
-                <div class="type-row">
-                    <div class="type-meta">H1 / 56px<br>Semibold</div>
-                    <div class="type-sample type-sample--h1">Your Course, Your Rules</div>
-                </div>
-                <div class="type-row">
-                    <div class="type-meta">H2 / 40px<br>Medium</div>
-                    <div class="type-sample type-sample--h2">Championship Simulation</div>
-                </div>
-                <div class="type-row">
-                    <div class="type-meta">H3 / 28px<br>Medium</div>
-                    <div class="type-sample type-sample--h3">Available around the clock, every day</div>
-                </div>
-            </div>
-            <div class="type-group">
-                <div class="type-family-label">Lato &mdash; Body &amp; Interface</div>
-                <div class="type-row">
-                    <div class="type-meta">Body / 17px<br>Regular</div>
-                    <div class="type-sample type-sample--body">Experience golf without limits. Our premium simulators bring the world's finest courses to your private lounge, available whenever inspiration strikes. No tee times. No weather delays. Just pure, uninterrupted play.</div>
-                </div>
-                <div class="type-row">
-                    <div class="type-meta">Small / 14px<br>Regular</div>
-                    <div class="type-sample type-sample--small">Membership includes unlimited access to 200+ championship courses, real-time swing analytics, and dedicated concierge support for private events.</div>
-                </div>
-                <div class="type-row">
-                    <div class="type-meta">Caption / 11px<br>Bold, Tracked</div>
-                    <div class="type-sample type-sample--caption">Reserve Your Private Session</div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <div class="voice-principles reveal delay-2">
+      <div class="voice-principle">
+        <h4>Confident</h4>
+        <p>The brand states, it does not plead. No exclamation marks. No superlatives. We describe what we offer and let the quality speak for itself.</p>
+      </div>
+      <div class="voice-principle">
+        <h4>Warm</h4>
+        <p>Premium is not cold. There is hospitality in every word. We welcome people in, not keep them at arm's length. Direct, personal, human.</p>
+      </div>
+      <div class="voice-principle">
+        <h4>Concise</h4>
+        <p>Say it in fewer words. Every sentence earns its place. The brand respects people's time and intelligence. No filler, no fluff.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- SECTION 4: MOOD BOARD -->
-    <section class="section moodboard" id="moodboard">
-        <div class="section-label">Mood Board</div>
-        <div class="section-title">Visual Atmosphere</div>
-        <div class="moodboard-layout">
-            <div class="mood-img mood-img--1">
-                <img src="https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Luxury interior atmosphere" loading="lazy">
-            </div>
-            <div class="mood-img mood-img--2">
-                <img src="https://images.pexels.com/photos/114972/pexels-photo-114972.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Golf course landscape" loading="lazy">
-            </div>
-            <div class="mood-img mood-img--3">
-                <img src="https://images.pexels.com/photos/6572968/pexels-photo-6572968.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Premium lounge setting" loading="lazy">
-            </div>
-        </div>
-    </section>
+<!-- ============================================
+     FOOTER
+     ============================================ -->
+<hr class="section-divider">
 
-    <!-- SECTION 5: COMPONENTS -->
-    <section class="section components" id="components">
-        <div class="section-label">Components</div>
-        <div class="section-title">UI Elements</div>
-        <div class="components-grid">
-            <div class="comp-group">
-                <div class="comp-group-title">Buttons</div>
-                <div class="btn-stack">
-                    <button class="btn btn--primary">Reserve a Bay</button>
-                    <button class="btn btn--secondary">View Membership</button>
-                    <button class="btn btn--ghost">Learn More</button>
-                </div>
-            </div>
-            <div class="comp-group">
-                <div class="comp-group-title">Form Inputs</div>
-                <div class="input-stack">
-                    <div class="form-field">
-                        <label class="form-label">Full Name</label>
-                        <input type="text" class="form-input" placeholder="Enter your name">
-                    </div>
-                    <div class="form-field">
-                        <label class="form-label">Email Address</label>
-                        <input type="email" class="form-input" placeholder="you@example.com">
-                    </div>
-                    <div class="form-field">
-                        <label class="form-label">Preferred Time</label>
-                        <select class="form-select">
-                            <option>Morning (6am - 12pm)</option>
-                            <option>Afternoon (12pm - 6pm)</option>
-                            <option>Evening (6pm - 12am)</option>
-                            <option>Late Night (12am - 6am)</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+<footer class="presentation-footer">
+  <div class="container">
+    <div class="footer-brand">247 <span>Golf</span> Simulator</div>
+    <p class="footer-tagline">The Private Lounge &mdash; Brand Concept 1</p>
+    <p class="footer-meta">Prepared by Oni Technologies &bull; March 2026 &bull; Confidential</p>
+  </div>
+</footer>
 
-    <!-- SECTION 6: LOGO CONCEPTS -->
-    <section class="section logos" id="logos">
-        <div class="section-label">Logo Concepts</div>
-        <div class="section-title">Identity Explorations</div>
-        <div class="logo-row">
-            <div class="logo-card">
-                <img class="logo-card-img" src="images/concept-1-icon.png" alt="Logo concept: geometric icon" loading="lazy">
-                <div class="logo-card-caption">Icon Mark &mdash; Geometric pin with negative space</div>
-            </div>
-            <div class="logo-card">
-                <img class="logo-card-img" src="images/concept-1-wordmark.png" alt="Logo concept: wordmark" loading="lazy">
-                <div class="logo-card-caption">Wordmark &mdash; Serif typography, champagne on dark</div>
-            </div>
-            <div class="logo-card">
-                <img class="logo-card-img" src="images/concept-1-combined.png" alt="Logo concept: combined mark" loading="lazy">
-                <div class="logo-card-caption">Combined Mark &mdash; Icon plus full name lockup</div>
-            </div>
-        </div>
-    </section>
+<!-- ============================================
+     SCROLL REVEAL SCRIPT
+     ============================================ -->
+<script>
+(function() {
+  var revealElements = document.querySelectorAll('.reveal');
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-brand">247GolfSimulator</div>
-        <div class="footer-note">Brand Concept Presentation &mdash; The Private Lounge</div>
-    </footer>
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.15,
+    rootMargin: '0px 0px -40px 0px'
+  });
 
-    <script>
-        // ---- Nav scroll effect ----
-        const nav = document.getElementById('topNav');
+  revealElements.forEach(function(el) {
+    observer.observe(el);
+  });
 
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 80) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
-            }
-        }, { passive: true });
-
-        // ---- Fade-up on scroll (IntersectionObserver) ----
-        const sections = document.querySelectorAll('.section');
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, {
-            threshold: 0.12,
-            rootMargin: '0px 0px -60px 0px'
-        });
-
-        sections.forEach(section => observer.observe(section));
-
-        // Make cover visible immediately
-        document.querySelector('.cover').classList.add('visible');
-
-        // ---- Smooth scroll for nav links ----
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const target = document.querySelector(link.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-    </script>
+  document.querySelectorAll('.logo-card img').forEach(function(img) {
+    img.addEventListener('error', function() {
+      this.classList.add('failed');
+    });
+  });
+})();
+</script>
 
 </body>
 </html>
