@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>247GolfSimulator — GAME ON Brand System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ================================================================
+   247 GOLF SIMULATOR — "GAME ON" BRAND SYSTEM
+   Direction: Bold Athletic — Nike / Gatorade campaign energy
+   Fonts: Barlow Condensed 700+ (headings) + Inter (body)
+   Colors: Deep Navy / Electric Volt / White / Steel
+   Layout: Diagonal clip-path cuts, asymmetric grid
+   ================================================================ */
+
+/* ── Reset & Custom Properties ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --navy: #0A1628;
+  --navy-deep: #050D18;
+  --navy-mid: #0E1E38;
+  --volt: #39FF14;
+  --volt-dim: rgba(57, 255, 20, 0.15);
+  --volt-glow: rgba(57, 255, 20, 0.4);
+  --white: #FFFFFF;
+  --steel: #94A3B8;
+  --steel-dark: #64748B;
+  --grid-line: rgba(57, 255, 20, 0.06);
+
+  --ff-heading: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --ff-body: 'Inter', system-ui, sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--ff-body);
+  background: var(--navy);
+  color: var(--white);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Subtle Grid Background ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Global Section Wrapper ── */
+.section {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Navigation ── */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(10, 22, 40, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(57, 255, 20, 0.1);
+}
+
+.nav__inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 64px;
+}
+
+.nav__brand {
+  font-family: var(--ff-heading);
+  font-weight: 800;
+  font-size: 1.3rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+.nav__brand span {
+  color: var(--volt);
+}
+
+.nav__links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav__links a {
+  font-family: var(--ff-heading);
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--steel);
+  text-decoration: none;
+  transition: color 0.25s, text-shadow 0.25s;
+  padding: 0.25rem 0;
+}
+
+.nav__links a:hover,
+.nav__links a.active {
+  color: var(--volt);
+  text-shadow: 0 0 20px var(--volt-glow);
+}
+
+/* ══════════════════════════════════════════════════════
+   SECTION 1: COVER — Full viewport hero
+   ══════════════════════════════════════════════════════ */
+.cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 120px 6vw 80px;
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 50%, var(--navy-mid) 100%);
+}
+
+/* Diagonal volt slash */
+.cover::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 60%;
+  height: 140%;
+  background: linear-gradient(165deg, transparent 30%, var(--volt) 30%, var(--volt) 32%, transparent 32%);
+  opacity: 0.12;
+  transform: skewX(-12deg);
+  pointer-events: none;
+}
+
+/* Secondary slash */
+.cover::after {
+  content: '';
+  position: absolute;
+  bottom: -10%;
+  left: 15%;
+  width: 50%;
+  height: 120%;
+  background: linear-gradient(165deg, transparent 60%, var(--volt) 60%, var(--volt) 61.5%, transparent 61.5%);
+  opacity: 0.07;
+  transform: skewX(-8deg);
+  pointer-events: none;
+}
+
+.cover__label {
+  font-family: var(--ff-heading);
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--volt);
+  margin-bottom: 1.5rem;
+  position: relative;
+  padding-left: 3rem;
+  opacity: 0;
+  animation: slideInLeft 0.8s var(--ease-out-expo) 0.3s forwards;
+}
+
+.cover__label::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 2rem;
+  height: 2px;
+  background: var(--volt);
+  box-shadow: 0 0 12px var(--volt-glow);
+}
+
+.cover__title {
+  font-family: var(--ff-heading);
+  font-weight: 900;
+  font-size: clamp(4rem, 10vw, 9rem);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: slideInUp 0.9s var(--ease-out-expo) 0.5s forwards;
+}
+
+.cover__title .volt {
+  color: var(--volt);
+  text-shadow: 0 0 40px var(--volt-glow), 0 0 80px rgba(57, 255, 20, 0.15);
+}
+
+.cover__tagline {
+  font-family: var(--ff-heading);
+  font-weight: 700;
+  font-size: clamp(1.2rem, 3vw, 2.2rem);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--steel);
+  margin-bottom: 3rem;
+  opacity: 0;
+  animation: slideInUp 0.9s var(--ease-out-expo) 0.7s forwards;
+}
+
+.cover__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: var(--ff-heading);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--navy);
+  background: var(--volt);
+  padding: 1rem 2.5rem;
+  text-decoration: none;
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 100%, 16px 100%);
+  box-shadow: 0 0 30px var(--volt-glow);
+  transition: transform 0.3s var(--ease-out-expo), box-shadow 0.3s;
+  opacity: 0;
+  animation: slideInUp 0.9s var(--ease-out-expo) 0.9s forwards;
+}
+
+.cover__cta:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 50px var(--volt-glow), 0 0 80px rgba(57, 255, 20, 0.2);
+}
+
+.cover__cta svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--navy);
+}
+
+/* Diagonal section divider */
+.divider-angle {
+  position: relative;
+  z-index: 2;
+  margin-top: -1px;
+}
+
+.divider-angle svg {
+  display: block;
+  width: 100%;
+  height: 80px;
+}
+
+/* ══════════════════════════════════════════════════════
+   SECTION 2: COLOR PALETTE — Angular wedges
+   ══════════════════════════════════════════════════════ */
+.palette {
+  padding: 100px 6vw;
+  background: var(--navy-deep);
+  position: relative;
+}
+
+.palette::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent 0%, var(--volt) 50%, transparent 100%);
+  opacity: 0.4;
+}
+
+.section__label {
+  font-family: var(--ff-heading);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--volt);
+  margin-bottom: 0.75rem;
+}
+
+.section__title {
+  font-family: var(--ff-heading);
+  font-weight: 800;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 3rem;
+  line-height: 1;
+}
+
+.palette__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.palette__wedge {
+  position: relative;
+  height: 260px;
+  clip-path: polygon(0 8%, 100% 0, 100% 92%, 0 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 2rem 1.5rem;
+  transition: transform 0.4s var(--ease-out-expo);
+  cursor: default;
+}
+
+.palette__wedge:hover {
+  transform: scale(1.04) translateY(-4px);
+}
+
+.palette__wedge--navy {
+  background: var(--navy);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.palette__wedge--volt {
+  background: var(--volt);
+}
+
+.palette__wedge--white {
+  background: var(--white);
+}
+
+.palette__wedge--steel {
+  background: var(--steel);
+}
+
+.palette__wedge-name {
+  font-family: var(--ff-heading);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.palette__wedge-hex {
+  font-family: var(--ff-body);
+  font-weight: 500;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.palette__wedge--navy .palette__wedge-name,
+.palette__wedge--navy .palette__wedge-hex { color: var(--white); }
+.palette__wedge--volt .palette__wedge-name,
+.palette__wedge--volt .palette__wedge-hex { color: var(--navy); }
+.palette__wedge--white .palette__wedge-name,
+.palette__wedge--white .palette__wedge-hex { color: var(--navy); }
+.palette__wedge--steel .palette__wedge-name,
+.palette__wedge--steel .palette__wedge-hex { color: var(--navy); }
+
+/* ══════════════════════════════════════════════════════
+   SECTION 3: TYPOGRAPHY
+   ══════════════════════════════════════════════════════ */
+.typography {
+  padding: 100px 6vw;
+  background: var(--navy);
+  position: relative;
+  clip-path: polygon(0 0, 100% 3%, 100% 97%, 0 100%);
+}
+
+.type__split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  margin-top: 1rem;
+}
+
+.type__heading-stack {
+  border-left: 3px solid var(--volt);
+  padding-left: 2rem;
+}
+
+.type__specimen {
+  font-family: var(--ff-heading);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: 1.5rem;
+}
+
+.type__specimen--xl { font-size: 4.5rem; letter-spacing: 0.02em; }
+.type__specimen--lg { font-size: 3rem; letter-spacing: 0.04em; }
+.type__specimen--md { font-size: 2rem; letter-spacing: 0.06em; }
+.type__specimen--sm { font-size: 1.2rem; letter-spacing: 0.1em; color: var(--steel); }
+
+.type__specimen .volt { color: var(--volt); }
+
+.type__font-label {
+  font-family: var(--ff-heading);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--volt);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.type__font-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(57, 255, 20, 0.2);
+}
+
+.type__body-stack p {
+  font-family: var(--ff-body);
+  color: var(--steel);
+  line-height: 1.7;
+  margin-bottom: 1.25rem;
+}
+
+.type__body-stack p:first-of-type {
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--white);
+}
+
+.type__body-stack p:nth-of-type(2) {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.type__body-stack p:last-of-type {
+  font-size: 0.875rem;
+  font-weight: 300;
+  color: var(--steel-dark);
+}
+
+.type__weight-row {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.type__weight {
+  font-family: var(--ff-heading);
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  color: var(--white);
+  opacity: 0.7;
+  transition: opacity 0.3s, color 0.3s;
+}
+
+.type__weight:hover {
+  opacity: 1;
+  color: var(--volt);
+}
+
+.type__weight--400 { font-weight: 400; }
+.type__weight--500 { font-weight: 500; }
+.type__weight--600 { font-weight: 600; }
+.type__weight--700 { font-weight: 700; }
+.type__weight--800 { font-weight: 800; }
+.type__weight--900 { font-weight: 900; }
+
+/* ══════════════════════════════════════════════════════
+   SECTION 4: MOOD BOARD — Angular photo frames
+   ══════════════════════════════════════════════════════ */
+.mood {
+  padding: 100px 6vw;
+  background: var(--navy-deep);
+  position: relative;
+}
+
+.mood__grid {
+  display: grid;
+  grid-template-columns: 1.3fr 0.9fr 0.8fr;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.mood__card {
+  position: relative;
+  overflow: hidden;
+  clip-path: polygon(0 0, 100% 4%, 100% 96%, 0 100%);
+  transition: transform 0.5s var(--ease-out-expo);
+}
+
+.mood__card:nth-child(2) {
+  clip-path: polygon(0 4%, 100% 0, 100% 100%, 0 96%);
+}
+
+.mood__card:nth-child(3) {
+  clip-path: polygon(4% 0, 100% 0, 96% 100%, 0 100%);
+}
+
+.mood__card:hover {
+  transform: scale(1.03);
+}
+
+.mood__card img {
+  width: 100%;
+  height: 380px;
+  object-fit: cover;
+  display: block;
+  filter: saturate(0.8) contrast(1.1);
+  transition: filter 0.5s, transform 0.5s var(--ease-out-expo);
+}
+
+.mood__card:hover img {
+  filter: saturate(1) contrast(1.05);
+  transform: scale(1.08);
+}
+
+.mood__card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(10, 22, 40, 0.85) 100%);
+  pointer-events: none;
+}
+
+.mood__card-label {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  font-family: var(--ff-heading);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--volt);
+}
+
+/* ══════════════════════════════════════════════════════
+   SECTION 5: COMPONENTS — Buttons & UI elements
+   ══════════════════════════════════════════════════════ */
+.components {
+  padding: 100px 6vw;
+  background: var(--navy);
+  position: relative;
+  clip-path: polygon(0 4%, 100% 0, 100% 100%, 0 96%);
+}
+
+.comp__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.comp__row-label {
+  width: 100%;
+  font-family: var(--ff-heading);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--steel-dark);
+  margin-bottom: 0.5rem;
+}
+
+/* Primary Button — Volt fill, angled clip */
+.btn-primary {
+  font-family: var(--ff-heading);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--navy);
+  background: var(--volt);
+  border: none;
+  padding: 1rem 2.5rem;
+  cursor: pointer;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 100%, 12px 100%);
+  box-shadow: 0 0 24px var(--volt-glow);
+  transition: transform 0.3s var(--ease-out-expo), box-shadow 0.3s;
+}
+
+.btn-primary:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 40px var(--volt-glow), 0 0 80px rgba(57, 255, 20, 0.15);
+}
+
+/* Outline Button */
+.btn-outline {
+  font-family: var(--ff-heading);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--volt);
+  background: transparent;
+  border: 2px solid var(--volt);
+  padding: 0.9rem 2.4rem;
+  cursor: pointer;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 100%, 12px 100%);
+  transition: background 0.3s, color 0.3s, transform 0.3s var(--ease-out-expo), box-shadow 0.3s;
+}
+
+.btn-outline:hover {
+  background: var(--volt);
+  color: var(--navy);
+  transform: scale(1.08);
+  box-shadow: 0 0 30px var(--volt-glow);
+}
+
+/* Ghost Button */
+.btn-ghost {
+  font-family: var(--ff-heading);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--steel);
+  background: transparent;
+  border: 1px solid var(--steel-dark);
+  padding: 0.9rem 2.4rem;
+  cursor: pointer;
+  transition: color 0.3s, border-color 0.3s, transform 0.3s var(--ease-out-expo);
+}
+
+.btn-ghost:hover {
+  color: var(--volt);
+  border-color: var(--volt);
+  transform: scale(1.05);
+}
+
+/* Small Button */
+.btn-sm {
+  font-family: var(--ff-heading);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--navy);
+  background: var(--volt);
+  border: none;
+  padding: 0.6rem 1.5rem;
+  cursor: pointer;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 100%, 8px 100%);
+  transition: transform 0.3s var(--ease-out-expo), box-shadow 0.3s;
+}
+
+.btn-sm:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 24px var(--volt-glow);
+}
+
+/* Tag / Badge */
+.tag {
+  display: inline-block;
+  font-family: var(--ff-heading);
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.4rem 1rem;
+  background: var(--volt-dim);
+  color: var(--volt);
+  border: 1px solid rgba(57, 255, 20, 0.25);
+}
+
+/* Input */
+.input-demo {
+  font-family: var(--ff-body);
+  font-size: 0.95rem;
+  color: var(--white);
+  background: var(--navy-deep);
+  border: 1px solid var(--steel-dark);
+  padding: 0.85rem 1.25rem;
+  width: 280px;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-demo::placeholder { color: var(--steel-dark); }
+
+.input-demo:focus {
+  border-color: var(--volt);
+  box-shadow: 0 0 16px var(--volt-dim);
+}
+
+/* Card Component */
+.comp__card {
+  background: var(--navy-deep);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 2rem;
+  max-width: 360px;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+  transition: border-color 0.3s, transform 0.3s var(--ease-out-expo);
+}
+
+.comp__card:hover {
+  border-color: rgba(57, 255, 20, 0.2);
+  transform: translateY(-4px);
+}
+
+.comp__card-title {
+  font-family: var(--ff-heading);
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 0.75rem;
+}
+
+.comp__card-body {
+  font-family: var(--ff-body);
+  font-size: 0.9rem;
+  color: var(--steel);
+  line-height: 1.65;
+  margin-bottom: 1.25rem;
+}
+
+.comp__card-action {
+  font-family: var(--ff-heading);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--volt);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: gap 0.3s var(--ease-out-expo);
+}
+
+.comp__card-action:hover {
+  gap: 1rem;
+}
+
+/* ══════════════════════════════════════════════════════
+   SECTION 6: LOGO CONCEPTS
+   ══════════════════════════════════════════════════════ */
+.logos {
+  padding: 100px 6vw;
+  background: var(--navy-deep);
+  position: relative;
+}
+
+.logos__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.logos__item {
+  position: relative;
+  background: var(--navy);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  transition: border-color 0.3s, transform 0.3s var(--ease-out-expo);
+}
+
+.logos__item:first-child {
+  grid-row: span 2;
+  clip-path: polygon(0 0, 100% 2%, 100% 98%, 0 100%);
+}
+
+.logos__item:nth-child(2) {
+  clip-path: polygon(0 0, 100% 0, 96% 100%, 0 100%);
+}
+
+.logos__item:nth-child(3) {
+  clip-path: polygon(4% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.logos__item:hover {
+  border-color: rgba(57, 255, 20, 0.15);
+  transform: scale(1.02);
+}
+
+.logos__item img {
+  max-width: 100%;
+  height: auto;
+  max-height: 360px;
+  object-fit: contain;
+}
+
+.logos__item-label {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  font-family: var(--ff-heading);
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--steel-dark);
+}
+
+/* ══════════════════════════════════════════════════════
+   FOOTER
+   ══════════════════════════════════════════════════════ */
+.footer {
+  padding: 3rem 6vw;
+  background: var(--navy-deep);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.footer__text {
+  font-family: var(--ff-heading);
+  font-weight: 500;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--steel-dark);
+}
+
+.footer__text span {
+  color: var(--volt);
+}
+
+/* ══════════════════════════════════════════════════════
+   ANIMATIONS
+   ══════════════════════════════════════════════════════ */
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-60px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(50px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Scroll-triggered animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
+}
+
+.reveal--left {
+  transform: translateX(-60px);
+}
+
+.reveal--right {
+  transform: translateX(60px);
+}
+
+.reveal--scale {
+  transform: scale(0.9);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translate(0) scale(1);
+}
+
+/* Staggered children */
+.reveal.visible .stagger:nth-child(1) { transition-delay: 0.05s; }
+.reveal.visible .stagger:nth-child(2) { transition-delay: 0.15s; }
+.reveal.visible .stagger:nth-child(3) { transition-delay: 0.25s; }
+.reveal.visible .stagger:nth-child(4) { transition-delay: 0.35s; }
+
+.stagger {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s var(--ease-out-expo), transform 0.5s var(--ease-out-expo);
+}
+
+.reveal.visible .stagger {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Volt pulse on certain elements */
+@keyframes voltPulse {
+  0%, 100% { box-shadow: 0 0 20px var(--volt-glow); }
+  50% { box-shadow: 0 0 40px var(--volt-glow), 0 0 60px rgba(57, 255, 20, 0.1); }
+}
+
+.pulse-glow {
+  animation: voltPulse 3s ease-in-out infinite;
+}
+
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .type__split { grid-template-columns: 1fr; gap: 3rem; }
+  .mood__grid { grid-template-columns: 1fr 1fr; }
+  .mood__grid .mood__card:nth-child(3) { grid-column: span 2; }
+  .logos__grid { grid-template-columns: 1fr; }
+  .logos__item:first-child { grid-row: span 1; }
+}
+
+@media (max-width: 768px) {
+  .nav__links { display: none; }
+  .palette__grid { grid-template-columns: 1fr 1fr; }
+  .mood__grid { grid-template-columns: 1fr; }
+  .mood__grid .mood__card:nth-child(3) { grid-column: span 1; }
+  .cover { padding: 100px 5vw 60px; }
+  .section__title { font-size: clamp(2rem, 6vw, 3rem); }
+  .comp__row { gap: 1rem; }
+}
+
+@media (max-width: 480px) {
+  .palette__grid { grid-template-columns: 1fr; }
+  .palette__wedge { height: 180px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ NAVIGATION ═══════ -->
+<nav class="nav">
+  <div class="nav__inner">
+    <div class="nav__brand">247<span>GOLF</span></div>
+    <ul class="nav__links">
+      <li><a href="#cover" class="active">Cover</a></li>
+      <li><a href="#palette">Colors</a></li>
+      <li><a href="#typography">Type</a></li>
+      <li><a href="#mood">Mood</a></li>
+      <li><a href="#components">Components</a></li>
+      <li><a href="#logos">Logos</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ═══════ SECTION 1: COVER ═══════ -->
+<section id="cover" class="section cover">
+  <div class="cover__label">Brand Direction 03</div>
+  <h1 class="cover__title">
+    247GOLF<span class="volt">SIMULATOR</span>
+  </h1>
+  <p class="cover__tagline">Golf On Your Time</p>
+  <a href="#palette" class="cover__cta pulse-glow">
+    Explore Brand System
+    <svg viewBox="0 0 24 24"><path d="M13.025 1l-2.847 2.828 6.176 6.176H0v3.992h16.354l-6.176 6.176L13.025 23 24 12z"/></svg>
+  </a>
+</section>
+
+<!-- Diagonal Divider -->
+<div class="divider-angle">
+  <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+    <polygon points="0,80 1440,0 1440,80" fill="#050D18"/>
+  </svg>
+</div>
+
+<!-- ═══════ SECTION 2: COLOR PALETTE ═══════ -->
+<section id="palette" class="section palette">
+  <div class="reveal">
+    <div class="section__label">Color System</div>
+    <h2 class="section__title">The Palette</h2>
+  </div>
+  <div class="palette__grid reveal">
+    <div class="palette__wedge palette__wedge--navy stagger">
+      <div class="palette__wedge-name">Deep Navy</div>
+      <div class="palette__wedge-hex">#0A1628</div>
+    </div>
+    <div class="palette__wedge palette__wedge--volt stagger">
+      <div class="palette__wedge-name">Electric Volt</div>
+      <div class="palette__wedge-hex">#39FF14</div>
+    </div>
+    <div class="palette__wedge palette__wedge--white stagger">
+      <div class="palette__wedge-name">Pure White</div>
+      <div class="palette__wedge-hex">#FFFFFF</div>
+    </div>
+    <div class="palette__wedge palette__wedge--steel stagger">
+      <div class="palette__wedge-name">Steel</div>
+      <div class="palette__wedge-hex">#94A3B8</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ SECTION 3: TYPOGRAPHY ═══════ -->
+<section id="typography" class="section typography">
+  <div class="reveal">
+    <div class="section__label">Type System</div>
+    <h2 class="section__title">Typography</h2>
+  </div>
+  <div class="type__split">
+    <div class="type__heading-stack reveal--left reveal">
+      <div class="type__font-label">Barlow Condensed 700-900</div>
+      <div class="type__specimen type__specimen--xl">GAME <span class="volt">ON</span></div>
+      <div class="type__specimen type__specimen--lg">EVERY SHOT COUNTS</div>
+      <div class="type__specimen type__specimen--md">24/7 ACCESS. ZERO LIMITS.</div>
+      <div class="type__specimen type__specimen--sm">Championship-grade simulators</div>
+      <div class="type__weight-row">
+        <span class="type__weight type__weight--400">Regular</span>
+        <span class="type__weight type__weight--500">Medium</span>
+        <span class="type__weight type__weight--600">Semi</span>
+        <span class="type__weight type__weight--700">Bold</span>
+        <span class="type__weight type__weight--800">Extra</span>
+        <span class="type__weight type__weight--900">Black</span>
+      </div>
+    </div>
+    <div class="type__body-stack reveal--right reveal">
+      <div class="type__font-label">Inter 300-700</div>
+      <p>State-of-the-art golf simulators available around the clock. No tee times. No waiting. Just you, the course, and the game you love.</p>
+      <p>Our bays feature Trackman-grade launch monitors, 4K projection, and courses from around the world. Whether you're grinding your swing or hosting a group, every session delivers tour-level data and a premium experience.</p>
+      <p>247GolfSimulator offers flexible memberships, walk-in rates, and private event booking. Open 24 hours, 7 days a week, 365 days a year.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ SECTION 4: MOOD BOARD ═══════ -->
+<section id="mood" class="section mood">
+  <div class="reveal">
+    <div class="section__label">Visual Direction</div>
+    <h2 class="section__title">Mood Board</h2>
+  </div>
+  <div class="mood__grid reveal">
+    <div class="mood__card stagger">
+      <img src="https://images.pexels.com/photos/19689233/pexels-photo-19689233.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Golf simulator environment" loading="lazy">
+      <div class="mood__card-overlay"></div>
+      <div class="mood__card-label">Environment</div>
+    </div>
+    <div class="mood__card stagger">
+      <img src="https://images.pexels.com/photos/3171815/pexels-photo-3171815.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Dynamic energy" loading="lazy">
+      <div class="mood__card-overlay"></div>
+      <div class="mood__card-label">Energy</div>
+    </div>
+    <div class="mood__card stagger">
+      <img src="https://images.pexels.com/photos/7221276/pexels-photo-7221276.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Athletic focus" loading="lazy">
+      <div class="mood__card-overlay"></div>
+      <div class="mood__card-label">Focus</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ SECTION 5: COMPONENTS ═══════ -->
+<section id="components" class="section components">
+  <div class="reveal">
+    <div class="section__label">UI Components</div>
+    <h2 class="section__title">Components</h2>
+  </div>
+
+  <!-- Buttons -->
+  <div class="comp__row reveal">
+    <div class="comp__row-label">Buttons</div>
+    <button class="btn-primary stagger">Book A Bay</button>
+    <button class="btn-outline stagger">View Courses</button>
+    <button class="btn-ghost stagger">Learn More</button>
+    <button class="btn-sm stagger">Join Now</button>
+  </div>
+
+  <!-- Tags & Input -->
+  <div class="comp__row reveal">
+    <div class="comp__row-label">Tags &amp; Input</div>
+    <span class="tag stagger">24/7 Open</span>
+    <span class="tag stagger">Pro Series</span>
+    <span class="tag stagger">Members Only</span>
+    <input class="input-demo stagger" type="text" placeholder="Enter your email">
+  </div>
+
+  <!-- Card -->
+  <div class="comp__row reveal">
+    <div class="comp__row-label">Card</div>
+    <div class="comp__card stagger">
+      <div class="comp__card-title">Bay Reservation</div>
+      <div class="comp__card-body">Reserve your private bay with 4K projection, Trackman data, and 200+ championship courses. Walk in or book ahead.</div>
+      <a href="#" class="comp__card-action">Reserve Now <span>&rarr;</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ SECTION 6: LOGO CONCEPTS ═══════ -->
+<section id="logos" class="section logos">
+  <div class="reveal">
+    <div class="section__label">Brand Mark</div>
+    <h2 class="section__title">Logo Concepts</h2>
+  </div>
+  <div class="logos__grid reveal">
+    <div class="logos__item stagger">
+      <img src="https://image.pollinations.ai/prompt/bold%20athletic%20logo%20icon%20dark%20navy%20electric%20green%20angular%20dynamic%20shield%20sports%20energy%20no%20text%20flat%20vector?width=512&height=512&model=flux&seed=121&nologo=true" alt="Logo concept — angular shield icon" loading="lazy">
+      <div class="logos__item-label">Icon Mark</div>
+    </div>
+    <div class="logos__item stagger">
+      <img src="https://image.pollinations.ai/prompt/bold%20athletic%20typography%20247%20GOLF%20all%20caps%20dark%20navy%20electric%20green%20glow%20sports%20brand%20dark%20background?width=800&height=400&model=flux&seed=122&nologo=true" alt="Logo concept — bold typography" loading="lazy">
+      <div class="logos__item-label">Logotype</div>
+    </div>
+    <div class="logos__item stagger">
+      <img src="https://image.pollinations.ai/prompt/bold%20sports%20logo%20angular%20shield%20icon%20247%20GOLF%20text%20dark%20navy%20electric%20green%20athletic%20Nike%20style%20dark%20background?width=800&height=400&model=flux&seed=123&nologo=true" alt="Logo concept — combined mark" loading="lazy">
+      <div class="logos__item-label">Combined Mark</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer class="footer">
+  <p class="footer__text">247GolfSimulator &mdash; <span>Game On</span> Brand System &mdash; Concept 3</p>
+</footer>
+
+<!-- ═══════ SCROLL REVEAL SCRIPT ═══════ -->
+<script>
+(function() {
+  const reveals = document.querySelectorAll('.reveal');
+
+  function onScroll() {
+    const trigger = window.innerHeight * 0.88;
+    reveals.forEach(el => {
+      const top = el.getBoundingClientRect().top;
+      if (top < trigger) {
+        el.classList.add('visible');
+      }
+    });
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('load', onScroll);
+
+  // Active nav link tracking
+  const sections = document.querySelectorAll('.section[id]');
+  const navLinks = document.querySelectorAll('.nav__links a');
+
+  function updateNav() {
+    let current = '';
+    sections.forEach(section => {
+      const top = section.offsetTop - 100;
+      if (window.scrollY >= top) {
+        current = section.getAttribute('id');
+      }
+    });
+    navLinks.forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+    });
+  }
+
+  window.addEventListener('scroll', updateNav, { passive: true });
+})();
+</script>
+
+</body>
+</html>

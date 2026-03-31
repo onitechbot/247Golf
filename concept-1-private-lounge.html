@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>247GolfSimulator — The Private Lounge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+           247GolfSimulator — The Private Lounge
+           Brand Concept Presentation
+           ============================================ */
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #0A0A0A;
+            --charcoal: #1C1C1C;
+            --champagne: #D4C5A0;
+            --ivory: #FAF6ED;
+            --champagne-muted: #B8AD8E;
+            --charcoal-light: #2A2A2A;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background: var(--black);
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background: var(--black);
+            color: var(--ivory);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Grain texture overlay on entire page */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+        }
+
+        /* ---- Top Navigation ---- */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 0 48px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(10, 10, 10, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(212, 197, 160, 0.08);
+            transition: background 0.4s ease, height 0.4s ease;
+        }
+
+        .top-nav.scrolled {
+            background: rgba(10, 10, 10, 0.92);
+            height: 60px;
+        }
+
+        .nav-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--champagne);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 36px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: 'Lato', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--ivory);
+            text-decoration: none;
+            position: relative;
+            padding-bottom: 4px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--champagne);
+            transition: width 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .nav-links a:hover {
+            color: var(--champagne);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* ---- Section Base ---- */
+        .section {
+            min-height: 100vh;
+            position: relative;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-label {
+            font-family: 'Lato', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--champagne-muted);
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(32px, 4vw, 56px);
+            font-weight: 400;
+            color: var(--ivory);
+            text-align: center;
+            margin-bottom: 60px;
+            line-height: 1.2;
+        }
+
+        /* ============================================
+           SECTION 1: COVER
+           ============================================ */
+        .cover {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 48px;
+            position: relative;
+            background: var(--black);
+        }
+
+        /* Soft radial vignette */
+        .cover::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 30%, rgba(10, 10, 10, 0.7) 100%);
+            pointer-events: none;
+        }
+
+        .cover-direction {
+            font-family: 'Lato', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--champagne-muted);
+            margin-bottom: 48px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cover-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(48px, 8vw, 120px);
+            font-weight: 700;
+            color: var(--ivory);
+            line-height: 1;
+            letter-spacing: -1px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 24px;
+        }
+
+        .cover-tagline {
+            font-family: 'Lato', sans-serif;
+            font-size: clamp(16px, 2vw, 24px);
+            font-weight: 300;
+            color: var(--champagne);
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 80px;
+        }
+
+        .cover-line {
+            width: 1px;
+            height: 80px;
+            background: linear-gradient(to bottom, var(--champagne), transparent);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ============================================
+           SECTION 2: COLOR PALETTE
+           ============================================ */
+        .palette {
+            padding: 120px 0 0;
+            min-height: 100vh;
+        }
+
+        .palette-columns {
+            display: flex;
+            width: 100%;
+            height: 70vh;
+            min-height: 500px;
+        }
+
+        .palette-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 40px 32px;
+            position: relative;
+            transition: flex 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .palette-col:hover {
+            flex: 1.4;
+        }
+
+        .palette-col--black {
+            background: #0A0A0A;
+        }
+
+        .palette-col--charcoal {
+            background: #1C1C1C;
+        }
+
+        .palette-col--champagne {
+            background: #D4C5A0;
+        }
+
+        .palette-col--ivory {
+            background: #FAF6ED;
+        }
+
+        .palette-col .color-name {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(20px, 2.5vw, 32px);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .palette-col .color-hex {
+            font-family: 'Lato', sans-serif;
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        .palette-col--black .color-name,
+        .palette-col--black .color-hex,
+        .palette-col--charcoal .color-name,
+        .palette-col--charcoal .color-hex {
+            color: var(--ivory);
+        }
+
+        .palette-col--champagne .color-name,
+        .palette-col--champagne .color-hex,
+        .palette-col--ivory .color-name,
+        .palette-col--ivory .color-hex {
+            color: var(--black);
+        }
+
+        /* ============================================
+           SECTION 3: TYPOGRAPHY
+           ============================================ */
+        .typography {
+            padding: 140px 48px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .type-specimen {
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .type-group {
+            margin-bottom: 80px;
+        }
+
+        .type-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .type-family-label {
+            font-family: 'Lato', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--champagne-muted);
+            margin-bottom: 40px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(212, 197, 160, 0.12);
+        }
+
+        .type-row {
+            display: flex;
+            align-items: baseline;
+            gap: 32px;
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .type-row:last-child {
+            border-bottom: none;
+        }
+
+        .type-meta {
+            flex: 0 0 140px;
+            font-family: 'Lato', sans-serif;
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--champagne-muted);
+            letter-spacing: 1px;
+        }
+
+        .type-sample {
+            flex: 1;
+            color: var(--ivory);
+        }
+
+        .type-sample--hero {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(48px, 6vw, 80px);
+            font-weight: 700;
+            line-height: 1.05;
+        }
+
+        .type-sample--h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(36px, 4vw, 56px);
+            font-weight: 600;
+            line-height: 1.1;
+        }
+
+        .type-sample--h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(28px, 3vw, 40px);
+            font-weight: 500;
+            line-height: 1.2;
+        }
+
+        .type-sample--h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(22px, 2vw, 28px);
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        .type-sample--body {
+            font-family: 'Lato', sans-serif;
+            font-size: 17px;
+            font-weight: 400;
+            line-height: 1.7;
+            color: rgba(250, 246, 237, 0.8);
+        }
+
+        .type-sample--small {
+            font-family: 'Lato', sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.6;
+            color: rgba(250, 246, 237, 0.6);
+        }
+
+        .type-sample--caption {
+            font-family: 'Lato', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--champagne-muted);
+        }
+
+        /* ============================================
+           SECTION 4: MOOD BOARD
+           ============================================ */
+        .moodboard {
+            padding: 140px 48px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .moodboard-layout {
+            position: relative;
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+            height: 70vh;
+            min-height: 500px;
+        }
+
+        .mood-img {
+            position: absolute;
+            overflow: hidden;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+            transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.6s ease;
+        }
+
+        .mood-img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.6);
+            z-index: 10;
+        }
+
+        .mood-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: saturate(0.7) brightness(0.9);
+            transition: filter 0.6s ease;
+        }
+
+        .mood-img:hover img {
+            filter: saturate(0.85) brightness(0.95);
+        }
+
+        .mood-img--1 {
+            width: 45%;
+            height: 80%;
+            top: 5%;
+            left: 0;
+            z-index: 2;
+        }
+
+        .mood-img--2 {
+            width: 40%;
+            height: 60%;
+            top: 0;
+            right: 5%;
+            z-index: 1;
+        }
+
+        .mood-img--3 {
+            width: 38%;
+            height: 55%;
+            bottom: 0;
+            right: 15%;
+            z-index: 3;
+        }
+
+        /* ============================================
+           SECTION 5: COMPONENTS
+           ============================================ */
+        .components {
+            padding: 140px 48px;
+            min-height: 100vh;
+        }
+
+        .components-grid {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+        }
+
+        .comp-group-title {
+            font-family: 'Lato', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--champagne-muted);
+            margin-bottom: 32px;
+        }
+
+        /* Buttons */
+        .btn-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 40px;
+            font-family: 'Lato', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+            text-align: center;
+        }
+
+        .btn--primary {
+            background: var(--champagne);
+            color: var(--black);
+        }
+
+        .btn--primary:hover {
+            background: var(--ivory);
+            box-shadow: 0 8px 32px rgba(212, 197, 160, 0.2);
+        }
+
+        .btn--secondary {
+            background: transparent;
+            color: var(--champagne);
+            border: 1px solid var(--champagne);
+        }
+
+        .btn--secondary:hover {
+            background: var(--champagne);
+            color: var(--black);
+        }
+
+        .btn--ghost {
+            background: transparent;
+            color: var(--ivory);
+            border: 1px solid rgba(250, 246, 237, 0.15);
+        }
+
+        .btn--ghost:hover {
+            border-color: var(--champagne);
+            color: var(--champagne);
+        }
+
+        /* Form Inputs */
+        .input-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-family: 'Lato', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--champagne-muted);
+        }
+
+        .form-input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(212, 197, 160, 0.2);
+            padding: 12px 0;
+            font-family: 'Lato', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            color: var(--ivory);
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input::placeholder {
+            color: rgba(250, 246, 237, 0.25);
+        }
+
+        .form-input:focus {
+            border-bottom-color: var(--champagne);
+        }
+
+        .form-select {
+            background: transparent;
+            border: 1px solid rgba(212, 197, 160, 0.2);
+            padding: 14px 16px;
+            font-family: 'Lato', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            color: var(--ivory);
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23D4C5A0' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-select:focus {
+            border-color: var(--champagne);
+        }
+
+        .form-select option {
+            background: var(--charcoal);
+            color: var(--ivory);
+        }
+
+        /* ============================================
+           SECTION 6: LOGO CONCEPTS
+           ============================================ */
+        .logos {
+            padding: 140px 48px;
+            min-height: 100vh;
+        }
+
+        .logo-row {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 40px;
+        }
+
+        .logo-card {
+            background: var(--charcoal);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .logo-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+        }
+
+        .logo-card-img {
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            display: block;
+            background: var(--charcoal-light);
+        }
+
+        .logo-card:first-child .logo-card-img {
+            aspect-ratio: 1 / 1;
+            max-height: 320px;
+        }
+
+        .logo-card-caption {
+            padding: 24px;
+            font-family: 'Lato', sans-serif;
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--champagne-muted);
+            letter-spacing: 1px;
+        }
+
+        /* ---- Footer ---- */
+        .footer {
+            padding: 80px 48px 40px;
+            text-align: center;
+            border-top: 1px solid rgba(212, 197, 160, 0.06);
+        }
+
+        .footer-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--champagne-muted);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .footer-note {
+            font-family: 'Lato', sans-serif;
+            font-size: 12px;
+            color: rgba(250, 246, 237, 0.25);
+            letter-spacing: 1px;
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 900px) {
+            .top-nav {
+                padding: 0 24px;
+            }
+
+            .nav-links {
+                gap: 20px;
+            }
+
+            .nav-links a {
+                font-size: 10px;
+                letter-spacing: 1.5px;
+            }
+
+            .palette-columns {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .palette-col {
+                min-height: 200px;
+            }
+
+            .palette-col:hover {
+                flex: 1;
+            }
+
+            .moodboard-layout {
+                height: auto;
+                min-height: auto;
+                display: flex;
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            .mood-img {
+                position: relative;
+                width: 100% !important;
+                height: auto !important;
+                top: auto !important;
+                left: auto !important;
+                right: auto !important;
+                bottom: auto !important;
+            }
+
+            .mood-img img {
+                height: auto;
+                aspect-ratio: 16 / 10;
+            }
+
+            .components-grid {
+                grid-template-columns: 1fr;
+                gap: 60px;
+            }
+
+            .logo-row {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .logo-card:first-child .logo-card-img {
+                aspect-ratio: 4 / 3;
+                max-height: none;
+            }
+
+            .typography,
+            .moodboard,
+            .components,
+            .logos {
+                padding: 100px 24px;
+            }
+
+            .type-row {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .type-meta {
+                flex: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .nav-links {
+                display: none;
+            }
+
+            .cover-brand {
+                font-size: 40px;
+            }
+
+            .cover-tagline {
+                font-size: 14px;
+                letter-spacing: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation -->
+    <nav class="top-nav" id="topNav">
+        <div class="nav-brand">247Golf</div>
+        <ul class="nav-links">
+            <li><a href="#cover">Cover</a></li>
+            <li><a href="#palette">Palette</a></li>
+            <li><a href="#typography">Type</a></li>
+            <li><a href="#moodboard">Mood</a></li>
+            <li><a href="#components">Components</a></li>
+            <li><a href="#logos">Logos</a></li>
+        </ul>
+    </nav>
+
+    <!-- SECTION 1: COVER -->
+    <section class="section cover" id="cover">
+        <span class="cover-direction">Brand Direction: The Private Lounge</span>
+        <h1 class="cover-brand">247GolfSimulator</h1>
+        <p class="cover-tagline">Golf on your time</p>
+        <div class="cover-line"></div>
+    </section>
+
+    <!-- SECTION 2: COLOR PALETTE -->
+    <section class="section palette" id="palette">
+        <div class="section-label">Color Palette</div>
+        <div class="section-title">The Tonal Foundation</div>
+        <div class="palette-columns">
+            <div class="palette-col palette-col--black">
+                <div class="color-name">Deep Black</div>
+                <div class="color-hex">#0A0A0A</div>
+            </div>
+            <div class="palette-col palette-col--charcoal">
+                <div class="color-name">Charcoal</div>
+                <div class="color-hex">#1C1C1C</div>
+            </div>
+            <div class="palette-col palette-col--champagne">
+                <div class="color-name">Champagne</div>
+                <div class="color-hex">#D4C5A0</div>
+            </div>
+            <div class="palette-col palette-col--ivory">
+                <div class="color-name">Ivory</div>
+                <div class="color-hex">#FAF6ED</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: TYPOGRAPHY -->
+    <section class="section typography" id="typography">
+        <div class="section-label">Typography</div>
+        <div class="section-title">Type Specimen</div>
+        <div class="type-specimen">
+            <div class="type-group">
+                <div class="type-family-label">Playfair Display &mdash; Display &amp; Headings</div>
+                <div class="type-row">
+                    <div class="type-meta">Hero / 80px<br>Bold</div>
+                    <div class="type-sample type-sample--hero">Private Luxury</div>
+                </div>
+                <div class="type-row">
+                    <div class="type-meta">H1 / 56px<br>Semibold</div>
+                    <div class="type-sample type-sample--h1">Your Course, Your Rules</div>
+                </div>
+                <div class="type-row">
+                    <div class="type-meta">H2 / 40px<br>Medium</div>
+                    <div class="type-sample type-sample--h2">Championship Simulation</div>
+                </div>
+                <div class="type-row">
+                    <div class="type-meta">H3 / 28px<br>Medium</div>
+                    <div class="type-sample type-sample--h3">Available around the clock, every day</div>
+                </div>
+            </div>
+            <div class="type-group">
+                <div class="type-family-label">Lato &mdash; Body &amp; Interface</div>
+                <div class="type-row">
+                    <div class="type-meta">Body / 17px<br>Regular</div>
+                    <div class="type-sample type-sample--body">Experience golf without limits. Our premium simulators bring the world's finest courses to your private lounge, available whenever inspiration strikes. No tee times. No weather delays. Just pure, uninterrupted play.</div>
+                </div>
+                <div class="type-row">
+                    <div class="type-meta">Small / 14px<br>Regular</div>
+                    <div class="type-sample type-sample--small">Membership includes unlimited access to 200+ championship courses, real-time swing analytics, and dedicated concierge support for private events.</div>
+                </div>
+                <div class="type-row">
+                    <div class="type-meta">Caption / 11px<br>Bold, Tracked</div>
+                    <div class="type-sample type-sample--caption">Reserve Your Private Session</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: MOOD BOARD -->
+    <section class="section moodboard" id="moodboard">
+        <div class="section-label">Mood Board</div>
+        <div class="section-title">Visual Atmosphere</div>
+        <div class="moodboard-layout">
+            <div class="mood-img mood-img--1">
+                <img src="https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Luxury interior atmosphere" loading="lazy">
+            </div>
+            <div class="mood-img mood-img--2">
+                <img src="https://images.pexels.com/photos/114972/pexels-photo-114972.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Golf course landscape" loading="lazy">
+            </div>
+            <div class="mood-img mood-img--3">
+                <img src="https://images.pexels.com/photos/6572968/pexels-photo-6572968.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Premium lounge setting" loading="lazy">
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: COMPONENTS -->
+    <section class="section components" id="components">
+        <div class="section-label">Components</div>
+        <div class="section-title">UI Elements</div>
+        <div class="components-grid">
+            <div class="comp-group">
+                <div class="comp-group-title">Buttons</div>
+                <div class="btn-stack">
+                    <button class="btn btn--primary">Reserve a Bay</button>
+                    <button class="btn btn--secondary">View Membership</button>
+                    <button class="btn btn--ghost">Learn More</button>
+                </div>
+            </div>
+            <div class="comp-group">
+                <div class="comp-group-title">Form Inputs</div>
+                <div class="input-stack">
+                    <div class="form-field">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-input" placeholder="Enter your name">
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-input" placeholder="you@example.com">
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">Preferred Time</label>
+                        <select class="form-select">
+                            <option>Morning (6am - 12pm)</option>
+                            <option>Afternoon (12pm - 6pm)</option>
+                            <option>Evening (6pm - 12am)</option>
+                            <option>Late Night (12am - 6am)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: LOGO CONCEPTS -->
+    <section class="section logos" id="logos">
+        <div class="section-label">Logo Concepts</div>
+        <div class="section-title">Identity Explorations</div>
+        <div class="logo-row">
+            <div class="logo-card">
+                <img class="logo-card-img" src="https://image.pollinations.ai/prompt/flat%20minimal%20geometric%20logo%20icon%20champagne%20gold%20and%20dark%20abstract%20golf%20pin%20negative%20space%20luxury%20premium%20white%20background%20no%20text%20vector?width=512&height=512&model=flux&seed=101&nologo=true" alt="Logo concept: geometric icon" loading="lazy">
+                <div class="logo-card-caption">Icon Mark &mdash; Geometric pin with negative space</div>
+            </div>
+            <div class="logo-card">
+                <img class="logo-card-img" src="https://image.pollinations.ai/prompt/elegant%20serif%20typography%20logo%20247%20GOLF%20champagne%20on%20dark%20background%20Playfair%20Display%20style%20luxury%20minimal?width=800&height=400&model=flux&seed=102&nologo=true" alt="Logo concept: wordmark" loading="lazy">
+                <div class="logo-card-caption">Wordmark &mdash; Serif typography, champagne on dark</div>
+            </div>
+            <div class="logo-card">
+                <img class="logo-card-img" src="https://image.pollinations.ai/prompt/premium%20luxury%20golf%20club%20logo%20champagne%20geometric%20icon%20serif%20text%20247%20Golf%20Simulator%20dark%20background%20minimal?width=800&height=400&model=flux&seed=103&nologo=true" alt="Logo concept: combined mark" loading="lazy">
+                <div class="logo-card-caption">Combined Mark &mdash; Icon plus full name lockup</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-brand">247GolfSimulator</div>
+        <div class="footer-note">Brand Concept Presentation &mdash; The Private Lounge</div>
+    </footer>
+
+    <script>
+        // ---- Nav scroll effect ----
+        const nav = document.getElementById('topNav');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 80) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        }, { passive: true });
+
+        // ---- Fade-up on scroll (IntersectionObserver) ----
+        const sections = document.querySelectorAll('.section');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.12,
+            rootMargin: '0px 0px -60px 0px'
+        });
+
+        sections.forEach(section => observer.observe(section));
+
+        // Make cover visible immediately
+        document.querySelector('.cover').classList.add('visible');
+
+        // ---- Smooth scroll for nav links ----
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

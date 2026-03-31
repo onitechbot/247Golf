@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>247GolfSimulator — Brand Direction</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: #0A0A0A; color: #fff; }
+
+  .header {
+    padding: 24px 32px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .header h1 { font-size: 18px; font-weight: 600; letter-spacing: 0.02em; }
+  .header p { font-size: 13px; color: rgba(255,255,255,0.45); }
+
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    overflow-x: auto;
+  }
+  .tab {
+    padding: 14px 24px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: rgba(255,255,255,0.4);
+    cursor: pointer;
+    border: none;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    background: none;
+    font-family: inherit;
+  }
+  .tab:hover { color: rgba(255,255,255,0.7); }
+  .tab.active { color: #fff; border-bottom-color: #fff; }
+  .badge {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-radius: 4px;
+    background: rgba(57,255,20,0.15);
+    color: #39FF14;
+    vertical-align: middle;
+  }
+
+  .viewer {
+    width: 100%;
+    height: calc(100vh - 200px);
+    border: none;
+    display: block;
+    min-height: 500px;
+  }
+
+  /* Feedback bar */
+  .feedback-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 16px 32px;
+    background: rgba(10,10,10,0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    z-index: 100;
+  }
+  .feedback-bar p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+  }
+  .feedback-bar strong { color: #fff; }
+  .feedback-btn {
+    padding: 12px 32px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: inherit;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s;
+  }
+  .feedback-btn.primary {
+    background: #39FF14;
+    color: #0A1628;
+  }
+  .feedback-btn.primary:hover {
+    filter: brightness(1.15);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(57,255,20,0.3);
+  }
+  .feedback-btn.secondary {
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .feedback-btn.secondary:hover {
+    border-color: rgba(255,255,255,0.5);
+    color: #fff;
+  }
+
+  /* Confirmation overlay */
+  .confirm-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(8px);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .confirm-overlay.show { display: flex; }
+  .confirm-card {
+    background: #111;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 40px;
+    max-width: 480px;
+    width: 90%;
+    text-align: center;
+  }
+  .confirm-card h2 { font-size: 20px; margin-bottom: 8px; }
+  .confirm-card p { font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 24px; }
+  .confirm-card .concept-name { color: #39FF14; font-weight: 700; }
+  .confirm-card textarea {
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+    min-height: 80px;
+    margin-bottom: 20px;
+  }
+  .confirm-card textarea::placeholder { color: rgba(255,255,255,0.3); }
+  .confirm-card textarea:focus { outline: none; border-color: #39FF14; }
+  .confirm-btns { display: flex; gap: 12px; justify-content: center; }
+
+  @media (max-width: 600px) {
+    .header { padding: 16px; }
+    .tab { padding: 12px 16px; font-size: 12px; }
+    .feedback-bar { padding: 12px 16px; flex-direction: column; text-align: center; }
+    .viewer { height: calc(100vh - 240px); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>247GolfSimulator</h1>
+  <p>Brand Direction — Pick the concept that feels right</p>
+</div>
+
+<div class="tabs" id="tabs">
+  <button class="tab active" data-src="concept-1-private-lounge.html" data-name="The Private Lounge">1. Private Lounge</button>
+  <button class="tab" data-src="concept-2-precision-play.html" data-name="Precision Play">2. Precision Play</button>
+  <button class="tab" data-src="concept-3-game-on.html" data-name="Game On">3. Game On <span class="badge">Recommended</span></button>
+  <button class="tab" data-src="concept-4-the-green.html" data-name="The Green">4. The Green</button>
+</div>
+
+<iframe class="viewer" id="viewer" src="concept-1-private-lounge.html"></iframe>
+
+<div class="feedback-bar">
+  <p>Viewing: <strong id="current-name">The Private Lounge</strong></p>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;">
+    <button class="feedback-btn secondary" onclick="openFeedback('notes')">Leave a Note</button>
+    <button class="feedback-btn primary" onclick="openFeedback('select')">Select This Concept</button>
+  </div>
+</div>
+
+<div class="confirm-overlay" id="overlay">
+  <div class="confirm-card">
+    <h2 id="overlay-title">Select Concept</h2>
+    <p>You're choosing <span class="concept-name" id="overlay-concept">The Private Lounge</span></p>
+    <textarea id="feedback-text" placeholder="Any notes, preferences, or changes you'd like? (optional)"></textarea>
+    <div class="confirm-btns">
+      <button class="feedback-btn secondary" onclick="closeOverlay()">Cancel</button>
+      <a class="feedback-btn primary" id="send-btn" href="#">Send</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('.tab');
+  const viewer = document.getElementById('viewer');
+  const currentName = document.getElementById('current-name');
+  let activeName = 'The Private Lounge';
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      viewer.src = tab.dataset.src;
+      activeName = tab.dataset.name;
+      currentName.textContent = activeName;
+    });
+  });
+
+  function openFeedback(type) {
+    const overlay = document.getElementById('overlay');
+    const title = document.getElementById('overlay-title');
+    const concept = document.getElementById('overlay-concept');
+    concept.textContent = activeName;
+    title.textContent = type === 'select' ? 'Confirm Selection' : 'Leave Feedback';
+    document.getElementById('feedback-text').value = '';
+    overlay.classList.add('show');
+    updateMailto(type);
+  }
+
+  function closeOverlay() {
+    document.getElementById('overlay').classList.remove('show');
+  }
+
+  function updateMailto(type) {
+    const btn = document.getElementById('send-btn');
+    const textarea = document.getElementById('feedback-text');
+
+    function buildHref() {
+      const notes = textarea.value;
+      const subject = type === 'select'
+        ? `247Golf Brand Selection: ${activeName}`
+        : `247Golf Brand Feedback: ${activeName}`;
+      const body = type === 'select'
+        ? `I'd like to go with: ${activeName}\n\n${notes ? 'Notes:\n' + notes : '(No additional notes)'}`
+        : `Feedback on ${activeName}:\n\n${notes || '(No notes provided)'}`;
+      return `mailto:admin@onitech.dev?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    }
+
+    btn.href = buildHref();
+    textarea.addEventListener('input', () => { btn.href = buildHref(); });
+  }
+
+  document.getElementById('overlay').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeOverlay();
+  });
+</script>
+
+</body>
+</html>

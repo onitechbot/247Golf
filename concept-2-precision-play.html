@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>247GolfSimulator — Precision Play Brand Direction</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    /* =========================================
+       RESET & BASE
+       ========================================= */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --white: #FFFFFF;
+      --forest: #1B4332;
+      --forest-light: #2D6A4F;
+      --sage: #F0F7F4;
+      --black: #111111;
+      --gray: #6B7280;
+      --gray-light: #E5E7EB;
+      --gray-lightest: #F9FAFB;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--black);
+      background: var(--white);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* =========================================
+       NAVIGATION
+       ========================================= */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-inner {
+      width: 100%;
+      max-width: 1200px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--black);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--black);
+    }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 20px;
+      background: var(--forest);
+      color: var(--white) !important;
+      border-radius: 100px;
+      font-size: 13px !important;
+      font-weight: 500;
+      transition: background 0.2s ease, transform 0.15s ease;
+    }
+
+    .nav-cta:hover {
+      background: var(--forest-light);
+      transform: translateY(-1px);
+    }
+
+    /* =========================================
+       SECTIONS
+       ========================================= */
+    section {
+      padding: 120px 24px;
+    }
+
+    .section-inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 600;
+      color: var(--black);
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .section-subtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 17px;
+      color: var(--gray);
+      line-height: 1.7;
+      max-width: 560px;
+    }
+
+    .bg-sage {
+      background: var(--sage);
+    }
+
+    .bg-white {
+      background: var(--white);
+    }
+
+    /* =========================================
+       FADE IN ANIMATION
+       ========================================= */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* =========================================
+       COVER SECTION
+       ========================================= */
+    .cover {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding-top: 56px;
+      background: var(--white);
+    }
+
+    .cover-content {
+      max-width: 720px;
+    }
+
+    .cover-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 48px;
+    }
+
+    .cover-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(42px, 7vw, 80px);
+      font-weight: 700;
+      color: var(--black);
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 24px;
+    }
+
+    .cover-tagline {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(18px, 2.5vw, 24px);
+      font-weight: 300;
+      color: var(--gray);
+      letter-spacing: -0.01em;
+      margin-bottom: 32px;
+    }
+
+    .cover-accent {
+      width: 48px;
+      height: 3px;
+      background: var(--forest);
+      border-radius: 2px;
+      margin: 0 auto;
+    }
+
+    /* =========================================
+       COLOR PALETTE
+       ========================================= */
+    .palette-stripes {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 48px;
+    }
+
+    .palette-stripe {
+      display: flex;
+      align-items: flex-end;
+      padding: 20px 28px;
+      position: relative;
+    }
+
+    .palette-stripe:nth-child(1) {
+      height: 120px;
+      background: var(--white);
+      border: 1px solid var(--gray-light);
+      border-bottom: none;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .palette-stripe:nth-child(2) {
+      height: 140px;
+      background: var(--forest);
+    }
+
+    .palette-stripe:nth-child(3) {
+      height: 100px;
+      background: var(--sage);
+    }
+
+    .palette-stripe:nth-child(4) {
+      height: 80px;
+      background: var(--black);
+    }
+
+    .palette-stripe:nth-child(5) {
+      height: 80px;
+      background: var(--gray);
+      border-radius: 0 0 12px 12px;
+    }
+
+    .palette-info {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+    }
+
+    .palette-name {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .palette-hex {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 400;
+      opacity: 0.7;
+    }
+
+    .palette-stripe:nth-child(1) .palette-name,
+    .palette-stripe:nth-child(1) .palette-hex {
+      color: var(--black);
+    }
+
+    .palette-stripe:nth-child(2) .palette-name,
+    .palette-stripe:nth-child(2) .palette-hex,
+    .palette-stripe:nth-child(4) .palette-name,
+    .palette-stripe:nth-child(4) .palette-hex,
+    .palette-stripe:nth-child(5) .palette-name,
+    .palette-stripe:nth-child(5) .palette-hex {
+      color: var(--white);
+    }
+
+    .palette-stripe:nth-child(3) .palette-name,
+    .palette-stripe:nth-child(3) .palette-hex {
+      color: var(--forest);
+    }
+
+    /* =========================================
+       TYPOGRAPHY SECTION
+       ========================================= */
+    .type-cards {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .type-card {
+      background: var(--white);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 40px;
+    }
+
+    .type-card-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--gray-light);
+    }
+
+    .type-specimen-row {
+      margin-bottom: 20px;
+    }
+
+    .type-specimen-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .type-specimen-size {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--gray);
+      margin-bottom: 4px;
+    }
+
+    .type-space-grotesk {
+      font-family: 'Space Grotesk', sans-serif;
+      color: var(--black);
+      letter-spacing: -0.03em;
+    }
+
+    .type-inter {
+      font-family: 'Inter', sans-serif;
+      color: var(--black);
+    }
+
+    .type-jetbrains {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--black);
+    }
+
+    /* =========================================
+       MOOD BOARD
+       ========================================= */
+    .mood-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 16px;
+      margin-top: 48px;
+      height: 540px;
+    }
+
+    .mood-img {
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .mood-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .mood-img:hover img {
+      transform: scale(1.03);
+    }
+
+    .mood-img-large {
+      grid-row: 1 / 3;
+    }
+
+    /* =========================================
+       COMPONENTS
+       ========================================= */
+    .components-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      margin-top: 48px;
+    }
+
+    .component-group h3 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 24px;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 32px;
+      border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background: var(--forest);
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background: var(--forest-light);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(27, 67, 50, 0.25);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--forest);
+      border: 1.5px solid var(--forest);
+    }
+
+    .btn-outline:hover {
+      background: var(--sage);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--gray);
+      border: 1.5px solid transparent;
+    }
+
+    .btn-ghost:hover {
+      color: var(--forest);
+      background: var(--sage);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--black);
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid var(--gray-light);
+      border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--black);
+      background: var(--white);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-input::placeholder {
+      color: #B0B7C0;
+    }
+
+    .form-input:focus {
+      border-color: var(--forest);
+      box-shadow: 0 0 0 3px rgba(27, 67, 50, 0.1);
+    }
+
+    .form-select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid var(--gray-light);
+      border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--black);
+      background: var(--white);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+    }
+
+    .form-select:focus {
+      border-color: var(--forest);
+      box-shadow: 0 0 0 3px rgba(27, 67, 50, 0.1);
+    }
+
+    /* =========================================
+       LOGO CONCEPTS
+       ========================================= */
+    .logo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .logo-card {
+      background: var(--white);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .logo-card:hover {
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+    }
+
+    .logo-card:first-child {
+      grid-row: 1 / 3;
+    }
+
+    .logo-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .logo-card-caption {
+      padding: 16px 20px;
+      border-top: 1px solid var(--gray-light);
+    }
+
+    .logo-card-caption p {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--gray);
+      letter-spacing: 0.04em;
+    }
+
+    /* =========================================
+       FOOTER
+       ========================================= */
+    .footer {
+      padding: 48px 24px;
+      text-align: center;
+      border-top: 1px solid var(--gray-light);
+    }
+
+    .footer p {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--gray);
+      letter-spacing: 0.04em;
+    }
+
+    /* =========================================
+       RESPONSIVE
+       ========================================= */
+    @media (max-width: 768px) {
+      section {
+        padding: 80px 20px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .cover-title {
+        font-size: 36px;
+      }
+
+      .mood-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        height: auto;
+      }
+
+      .mood-img-large {
+        grid-row: auto;
+        height: 280px;
+      }
+
+      .mood-img:not(.mood-img-large) {
+        height: 200px;
+      }
+
+      .components-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .logo-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .logo-card:first-child {
+        grid-row: auto;
+      }
+
+      .palette-stripe:nth-child(1) { height: 80px; }
+      .palette-stripe:nth-child(2) { height: 100px; }
+      .palette-stripe:nth-child(3) { height: 70px; }
+      .palette-stripe:nth-child(4) { height: 60px; }
+      .palette-stripe:nth-child(5) { height: 60px; }
+    }
+
+    @media (max-width: 480px) {
+      .cover-title {
+        font-size: 28px;
+      }
+
+      .type-card {
+        padding: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ======================================
+       NAVIGATION
+       ====================================== -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="nav-brand">247GolfSimulator</div>
+      <ul class="nav-links">
+        <li><a href="#palette">Colors</a></li>
+        <li><a href="#typography">Type</a></li>
+        <li><a href="#mood">Mood</a></li>
+        <li><a href="#components">Components</a></li>
+        <li><a href="#logos">Logos</a></li>
+        <li><a href="#" class="nav-cta">Get Started</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ======================================
+       COVER
+       ====================================== -->
+  <section class="cover" id="cover">
+    <div class="cover-content fade-in">
+      <p class="cover-label">Brand Direction: Precision Play</p>
+      <h1 class="cover-title">247Golf<wbr>Simulator</h1>
+      <p class="cover-tagline">Golf on your time</p>
+      <div class="cover-accent"></div>
+    </div>
+  </section>
+
+  <!-- ======================================
+       COLOR PALETTE
+       ====================================== -->
+  <section class="bg-sage" id="palette">
+    <div class="section-inner fade-in">
+      <p class="section-label">01 / Color Palette</p>
+      <h2 class="section-title">Clean, grounded colors</h2>
+      <p class="section-subtitle">A restrained palette rooted in forest green and white. Every color earns its place.</p>
+
+      <div class="palette-stripes">
+        <div class="palette-stripe">
+          <div class="palette-info">
+            <span class="palette-name">White</span>
+            <span class="palette-hex">#FFFFFF</span>
+          </div>
+        </div>
+        <div class="palette-stripe">
+          <div class="palette-info">
+            <span class="palette-name">Deep Forest</span>
+            <span class="palette-hex">#1B4332</span>
+          </div>
+        </div>
+        <div class="palette-stripe">
+          <div class="palette-info">
+            <span class="palette-name">Light Sage</span>
+            <span class="palette-hex">#F0F7F4</span>
+          </div>
+        </div>
+        <div class="palette-stripe">
+          <div class="palette-info">
+            <span class="palette-name">Near Black</span>
+            <span class="palette-hex">#111111</span>
+          </div>
+        </div>
+        <div class="palette-stripe">
+          <div class="palette-info">
+            <span class="palette-name">Medium Gray</span>
+            <span class="palette-hex">#6B7280</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================
+       TYPOGRAPHY
+       ====================================== -->
+  <section class="bg-white" id="typography">
+    <div class="section-inner fade-in">
+      <p class="section-label">02 / Typography</p>
+      <h2 class="section-title">Three faces, clear roles</h2>
+      <p class="section-subtitle">Space Grotesk for impact. Inter for reading. JetBrains Mono for data and labels.</p>
+
+      <div class="type-cards">
+        <!-- Space Grotesk -->
+        <div class="type-card">
+          <p class="type-card-label">Space Grotesk &mdash; Headings</p>
+          <div class="type-specimen-row">
+            <p class="type-specimen-size">64px / Bold</p>
+            <p class="type-space-grotesk" style="font-size: 48px; font-weight: 700; line-height: 1.1;">Play Anytime</p>
+          </div>
+          <div class="type-specimen-row">
+            <p class="type-specimen-size">40px / SemiBold</p>
+            <p class="type-space-grotesk" style="font-size: 32px; font-weight: 600; line-height: 1.15;">Precision Matters</p>
+          </div>
+          <div class="type-specimen-row">
+            <p class="type-specimen-size">24px / Medium</p>
+            <p class="type-space-grotesk" style="font-size: 22px; font-weight: 500; line-height: 1.3;">Every Detail Counts</p>
+          </div>
+          <div class="type-specimen-row">
+            <p class="type-specimen-size">Character Set</p>
+            <p class="type-space-grotesk" style="font-size: 18px; font-weight: 400; line-height: 1.4;">ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz<br>0123456789 &amp; ! ? # @ $</p>
+          </div>
+        </div>
+
+        <!-- Inter -->
+        <div class="type-card">
+          <p class="type-card-label">Inter &mdash; Body</p>
+          <div class="type-specimen-row">
+            <p class="type-specimen-size">17px / Regular</p>
+            <p class="type-inter" style="font-size: 17px; font-weight: 400; line-height: 1.7; max-width: 600px;">Professional golf simulation that respects your schedule. Book a bay, pick up a club, and play a full 18 holes in under an hour. No tee times. No weather delays. Just golf.</p>
+          </div>
+          <div class="type-specimen-row">
+            <p class="type-specimen-size">14px / Medium</p>
+            <p class="type-inter" style="font-size: 14px; font-weight: 500; line-height: 1.6; color: var(--gray);">Available 24/7 with high-accuracy launch monitors and course-quality projection.</p>
+          </div>
+          <div class="type-specimen-row">
+            <p class="type-specimen-size">13px / SemiBold</p>
+            <p class="type-inter" style="font-size: 13px; font-weight: 600; line-height: 1.5; letter-spacing: 0.01em;">BUTTON LABELS  /  NAVIGATION  /  UI TEXT</p>
+          </div>
+        </div>
+
+        <!-- JetBrains Mono -->
+        <div class="type-card">
+          <p class="type-card-label">JetBrains Mono &mdash; Data &amp; Labels</p>
+          <div class="type-specimen-row">
+            <p class="type-specimen-size">14px / Regular</p>
+            <p class="type-jetbrains" style="font-size: 14px; font-weight: 400; line-height: 1.8;">SWING SPEED: 112 MPH<br>CARRY: 287 YDS<br>SPIN RATE: 2,340 RPM<br>LAUNCH ANGLE: 14.2&deg;</p>
+          </div>
+          <div class="type-specimen-row">
+            <p class="type-specimen-size">11px / Medium</p>
+            <p class="type-jetbrains" style="font-size: 11px; font-weight: 500; letter-spacing: 0.06em; color: var(--gray); line-height: 1.6;">SECTION LABELS  /  METADATA  /  TIMESTAMPS  /  STATUS CODES</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================
+       MOOD BOARD
+       ====================================== -->
+  <section class="bg-sage" id="mood">
+    <div class="section-inner fade-in">
+      <p class="section-label">03 / Mood Board</p>
+      <h2 class="section-title">The feel of the brand</h2>
+      <p class="section-subtitle">Clean lines, natural light, focused composition. Golf as a quiet act of precision.</p>
+
+      <div class="mood-grid">
+        <div class="mood-img mood-img-large">
+          <img src="https://images.pexels.com/photos/164250/pexels-photo-164250.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Golf course wide shot" loading="lazy">
+        </div>
+        <div class="mood-img">
+          <img src="https://images.pexels.com/photos/6256827/pexels-photo-6256827.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Golf detail shot" loading="lazy">
+        </div>
+        <div class="mood-img">
+          <img src="https://images.pexels.com/photos/13061477/pexels-photo-13061477.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Golf atmosphere" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================
+       COMPONENTS
+       ====================================== -->
+  <section class="bg-white" id="components">
+    <div class="section-inner fade-in">
+      <p class="section-label">04 / Components</p>
+      <h2 class="section-title">Interface building blocks</h2>
+      <p class="section-subtitle">Buttons, inputs, and form elements that carry the brand through every interaction.</p>
+
+      <div class="components-grid">
+        <!-- Buttons -->
+        <div class="component-group">
+          <h3>Buttons</h3>
+          <div class="btn-row">
+            <button class="btn btn-primary">Book a Session</button>
+            <button class="btn btn-outline">View Pricing</button>
+            <button class="btn btn-ghost">Learn More</button>
+          </div>
+        </div>
+
+        <!-- Form Inputs -->
+        <div class="component-group">
+          <h3>Form Inputs</h3>
+          <div class="form-group">
+            <label class="form-label" for="input-name">Full Name</label>
+            <input type="text" id="input-name" class="form-input" placeholder="Enter your name">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="input-email">Email Address</label>
+            <input type="email" id="input-email" class="form-input" placeholder="you@example.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="input-select">Preferred Bay</label>
+            <select id="input-select" class="form-select">
+              <option value="" disabled selected>Select a bay</option>
+              <option value="1">Bay 1 &mdash; TrackMan</option>
+              <option value="2">Bay 2 &mdash; Foresight</option>
+              <option value="3">Bay 3 &mdash; Full Swing</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" style="width: 100%; margin-top: 4px;">Reserve Now</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================
+       LOGO CONCEPTS
+       ====================================== -->
+  <section class="bg-sage" id="logos">
+    <div class="section-inner fade-in">
+      <p class="section-label">05 / Logo Concepts</p>
+      <h2 class="section-title">Identity explorations</h2>
+      <p class="section-subtitle">Early directions ranging from abstract icon to clean wordmark. All rooted in the Precision Play sensibility.</p>
+
+      <div class="logo-grid">
+        <div class="logo-card">
+          <img src="https://image.pollinations.ai/prompt/minimal%20geometric%20logo%20icon%20forest%20green%20on%20white%20abstract%20golf%20flag%20simple%20geometric%20shape%20clean%20flat%20vector%20no%20text?width=512&height=512&model=flux&seed=111&nologo=true" alt="Abstract icon concept" loading="lazy">
+          <div class="logo-card-caption">
+            <p>Geometric Icon &mdash; Abstract flag mark</p>
+          </div>
+        </div>
+        <div class="logo-card">
+          <img src="https://image.pollinations.ai/prompt/clean%20modern%20typography%20logo%20247%20GOLF%20dark%20forest%20green%20Space%20Grotesk%20font%20minimal%20geometric%20white%20background?width=800&height=400&model=flux&seed=112&nologo=true" alt="Typography logo concept" loading="lazy">
+          <div class="logo-card-caption">
+            <p>Typography &mdash; Space Grotesk wordmark</p>
+          </div>
+        </div>
+        <div class="logo-card">
+          <img src="https://image.pollinations.ai/prompt/modern%20minimal%20golf%20logo%20geometric%20green%20icon%20clean%20sans%20serif%20247%20Golf%20Simulator%20white%20background%20flat?width=800&height=400&model=flux&seed=113&nologo=true" alt="Combined logo concept" loading="lazy">
+          <div class="logo-card-caption">
+            <p>Combined &mdash; Icon + wordmark lockup</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================
+       FOOTER
+       ====================================== -->
+  <footer class="footer">
+    <p>247GolfSimulator &mdash; Precision Play Brand Direction &mdash; Concept 2</p>
+  </footer>
+
+  <!-- ======================================
+       SCROLL ANIMATION
+       ====================================== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var elements = document.querySelectorAll('.fade-in');
+
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -40px 0px'
+      });
+
+      elements.forEach(function (el) {
+        observer.observe(el);
+      });
+    });
+  </script>
+
+</body>
+</html>
